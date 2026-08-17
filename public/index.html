@@ -93,6 +93,22 @@
   .deck-wrap{
     max-width:900px;
     margin:0 auto 30px;
+    display:none;
+  }
+  .deck-wrap.visible{
+    display:block;
+  }
+  .stage-msg{
+    text-align:center;
+    color:var(--gold);
+    font-style:italic;
+    margin:0 0 14px;
+    min-height:1.2em;
+    opacity:.9;
+  }
+  textarea:disabled, select:disabled{
+    opacity:.55;
+    cursor:not-allowed;
   }
   .deck-grid{
     display:grid;
@@ -123,6 +139,17 @@
   }
   .card-back.disabled{
     cursor:default;
+  }
+  .card-back.shuffle{
+    animation:shuffleJitter .5s ease-in-out infinite;
+    pointer-events:none;
+  }
+  @keyframes shuffleJitter{
+    0%, 100% { transform:translate(0,0) rotate(0deg); }
+    20% { transform:translate(var(--sx1,6px), var(--sy1,-4px)) rotate(var(--sr1,-6deg)); }
+    40% { transform:translate(var(--sx2,-5px), var(--sy2,5px)) rotate(var(--sr2,5deg)); }
+    60% { transform:translate(var(--sx3,4px), var(--sy3,3px)) rotate(var(--sr3,-4deg)); }
+    80% { transform:translate(var(--sx4,-6px), var(--sy4,-3px)) rotate(var(--sr4,6deg)); }
   }
 
   .picked-row{
@@ -243,7 +270,9 @@
   </div>
 </div>
 
-<div class="deck-wrap">
+<div class="stage-msg" id="stageMsg"></div>
+
+<div class="deck-wrap" id="deckWrap">
   <div class="deck-grid" id="deckGrid"></div>
 </div>
 
@@ -264,6 +293,8 @@ let pickedIndices = [];
 let orientations = [];
 
 const deckGrid = document.getElementById('deckGrid');
+const deckWrap = document.getElementById('deckWrap');
+const stageMsg = document.getElementById('stageMsg');
 const pickedRow = document.getElementById('pickedRow');
 const readingEl = document.getElementById('reading');
 const dealBtn = document.getElementById('dealBtn');
@@ -271,19 +302,58 @@ const resetBtn = document.getElementById('resetBtn');
 const spreadSel = document.getElementById('spread');
 const qEl = document.getElementById('q');
 
+const SHUFFLE_MS = 1400;
+
+function jitter(){
+  return (Math.random() * 16 - 8) + 'px';
+}
+function jitterDeg(){
+  return (Math.random() * 16 - 8) + 'deg';
+}
+
 function buildDeckGrid(){
   deckGrid.innerHTML = '';
   DECK.cards.forEach((c, i) => {
     const d = document.createElement('div');
-    d.className = 'card-back';
+    d.className = 'card-back shuffle';
     d.textContent = '🏏';
     d.dataset.idx = i;
+    ['1','2','3','4'].forEach(n => {
+      d.style.setProperty(`--sx${n}`, jitter());
+      d.style.setProperty(`--sy${n}`, jitter());
+      d.style.setProperty(`--sr${n}`, jitterDeg());
+    });
+    d.style.animationDelay = (Math.random() * 0.3) + 's';
     d.addEventListener('click', onPick);
     deckGrid.appendChild(d);
   });
 }
 
+function beginReading(){
+  needed = parseInt(spreadSel.value, 10);
+  pickedIndices = [];
+  orientations = [];
+  readingEl.style.display = 'none';
+  readingEl.innerHTML = '';
+  pickedRow.innerHTML = '';
+
+  qEl.disabled = true;
+  spreadSel.disabled = true;
+  dealBtn.disabled = true;
+
+  buildDeckGrid();
+  deckWrap.classList.add('visible');
+  stageMsg.textContent = 'Shuffling the deck…';
+  deckWrap.scrollIntoView({behavior:'smooth', block:'nearest'});
+
+  setTimeout(() => {
+    Array.from(deckGrid.children).forEach(c => c.classList.remove('shuffle'));
+    stageMsg.textContent = needed === 1 ? 'Pick a card…' : `Pick ${needed} cards…`;
+  }, SHUFFLE_MS);
+}
+
 function onPick(e){
+  if (e.currentTarget.classList.contains('shuffle')) return;
   if (pickedIndices.length >= needed) return;
   const idx = parseInt(e.currentTarget.dataset.idx, 10);
   if (pickedIndices.includes(idx)) return;
@@ -294,7 +364,10 @@ function onPick(e){
   renderPicked();
   if (pickedIndices.length === needed){
     Array.from(deckGrid.children).forEach(c => c.classList.add('disabled'));
+    stageMsg.textContent = '';
     generateReading();
+  } else {
+    stageMsg.textContent = `Pick ${needed - pickedIndices.length} more…`;
   }
 }
 
@@ -364,12 +437,18 @@ function resetAll(){
   readingEl.style.display = 'none';
   readingEl.innerHTML = '';
   pickedRow.innerHTML = '';
-  buildDeckGrid();
+  deckGrid.innerHTML = '';
+  deckWrap.classList.remove('visible');
+  stageMsg.textContent = '';
+
+  qEl.disabled = false;
+  spreadSel.disabled = false;
+  dealBtn.disabled = false;
 }
 
-dealBtn.addEventListener('click', resetAll);
+dealBtn.addEventListener('click', beginReading);
 resetBtn.addEventListener('click', () => { qEl.value=''; resetAll(); });
-spreadSel.addEventListener('change', resetAll);
+spreadSel.addEventListener('change', () => { needed = parseInt(spreadSel.value, 10); });
 
 resetAll();
 </script>
