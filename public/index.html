@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cricket Tarot</title>
+<style>
+  :root{
+    --grass:#0b3d2e;
+    --grass2:#123f2f;
+    --gold:#d9a441;
+    --cream:#f4ead2;
+    --ink:#1c1810;
+    --red:#8c2f2f;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:Georgia, 'Times New Roman', serif;
+    background:radial-gradient(ellipse at top, var(--grass2), var(--grass) 70%);
+    color:var(--cream);
+    min-height:100vh;
+    padding:24px 16px 60px;
+  }
+  h1{
+    text-align:center;
+    font-size:2rem;
+    letter-spacing:2px;
+    margin-bottom:4px;
+    color:var(--gold);
+    text-shadow:0 2px 6px rgba(0,0,0,.4);
+  }
+  .subtitle{
+    text-align:center;
+    color:var(--cream);
+    opacity:.8;
+    margin-bottom:24px;
+    font-style:italic;
+  }
+  .panel{
+    max-width:760px;
+    margin:0 auto 28px;
+    background:rgba(0,0,0,.25);
+    border:1px solid rgba(217,164,65,.4);
+    border-radius:12px;
+    padding:18px 20px;
+  }
+  .panel label{
+    display:block;
+    margin-bottom:8px;
+    color:var(--gold);
+    font-size:.95rem;
+  }
+  .panel textarea{
+    width:100%;
+    min-height:60px;
+    border-radius:8px;
+    border:1px solid rgba(217,164,65,.5);
+    background:rgba(244,234,210,.95);
+    color:var(--ink);
+    font-family:inherit;
+    padding:10px;
+    resize:vertical;
+  }
+  .controls{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+    margin-top:12px;
+  }
+  select, button{
+    font-family:inherit;
+    font-size:.95rem;
+    padding:8px 14px;
+    border-radius:8px;
+    border:1px solid var(--gold);
+    background:var(--gold);
+    color:var(--ink);
+    cursor:pointer;
+    font-weight:bold;
+  }
+  select{
+    background:rgba(244,234,210,.95);
+    font-weight:normal;
+  }
+  button:hover{ filter:brightness(1.08); }
+  button:disabled{ opacity:.5; cursor:not-allowed; }
+  #resetBtn{
+    background:transparent;
+    color:var(--cream);
+  }
+
+  .deck-wrap{
+    max-width:900px;
+    margin:0 auto 30px;
+  }
+  .deck-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(64px,1fr));
+    gap:8px;
+  }
+  .card-back{
+    aspect-ratio:2/3;
+    border-radius:8px;
+    background:
+      repeating-linear-gradient(45deg, rgba(217,164,65,.15) 0 6px, transparent 6px 12px),
+      linear-gradient(160deg, var(--red), #5e1f1f);
+    border:2px solid var(--gold);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    color:var(--gold);
+    font-size:1.1rem;
+    transition:transform .15s ease;
+    user-select:none;
+  }
+  .card-back:hover{ transform:translateY(-4px); }
+  .card-back.picked{
+    opacity:.25;
+    cursor:default;
+    transform:none;
+  }
+  .card-back.disabled{
+    cursor:default;
+  }
+
+  .picked-row{
+    display:flex;
+    gap:16px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:20px auto 10px;
+    max-width:900px;
+  }
+  .tcard{
+    width:150px;
+    background:var(--cream);
+    color:var(--ink);
+    border-radius:10px;
+    border:3px solid var(--gold);
+    padding:12px 10px;
+    text-align:center;
+    box-shadow:0 8px 18px rgba(0,0,0,.35);
+    animation:flipin .5s ease;
+  }
+  @keyframes flipin{
+    from{ transform:rotateY(90deg); opacity:0; }
+    to{ transform:rotateY(0); opacity:1; }
+  }
+  .tcard .pos{
+    font-size:.7rem;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:var(--red);
+    margin-bottom:4px;
+  }
+  .tcard .name{
+    font-weight:bold;
+    font-size:1.05rem;
+    margin-bottom:2px;
+  }
+  .tcard .orient{
+    font-size:.78rem;
+    font-style:italic;
+    opacity:.75;
+    margin-bottom:6px;
+  }
+  .tcard .trad{
+    font-size:.68rem;
+    opacity:.55;
+  }
+
+  #reading{
+    max-width:760px;
+    margin:20px auto 0;
+    background:rgba(244,234,210,.97);
+    color:var(--ink);
+    border-radius:12px;
+    padding:22px 24px;
+    line-height:1.55;
+    box-shadow:0 10px 26px rgba(0,0,0,.35);
+    display:none;
+  }
+  #reading h2{
+    margin-top:0;
+    color:var(--red);
+    font-size:1.15rem;
+    border-bottom:2px solid var(--gold);
+    padding-bottom:8px;
+  }
+  #reading .card-block{
+    margin-bottom:16px;
+  }
+  #reading .card-block h3{
+    margin:0 0 2px;
+    font-size:1rem;
+  }
+  #reading .card-block .meta{
+    font-size:.8rem;
+    color:var(--red);
+    font-style:italic;
+    margin-bottom:4px;
+  }
+  #reading .closing{
+    margin-top:14px;
+    padding-top:12px;
+    border-top:1px dashed rgba(140,47,47,.4);
+    font-style:italic;
+  }
+  #reading .loading{
+    font-style:italic;
+    opacity:.75;
+  }
+  #reading .error{
+    color:var(--red);
+    font-weight:bold;
+  }
+  footer{
+    text-align:center;
+    margin-top:30px;
+    font-size:.75rem;
+    opacity:.6;
+  }
+</style>
+</head>
+<body>
+
+<h1>🏏 Cricket Tarot</h1>
+<div class="subtitle">A sample AI agent that reads your fortune, one wicket at a time.</div>
+
+<div class="panel">
+  <label for="q">What's on your mind? (optional — helps tailor the reading)</label>
+  <textarea id="q" placeholder="e.g. Should I take this new role? How's my form lately? Big decision coming up..."></textarea>
+  <div class="controls">
+    <label for="spread" style="margin:0;">Spread:</label>
+    <select id="spread">
+      <option value="1">Single Card — quick read</option>
+      <option value="3" selected>Three Card — Situation / Challenge / Advice</option>
+    </select>
+    <button id="dealBtn">Shuffle &amp; Deal</button>
+    <button id="resetBtn">Reset</button>
+  </div>
+</div>
+
+<div class="deck-wrap">
+  <div class="deck-grid" id="deckGrid"></div>
+</div>
+
+<div class="picked-row" id="pickedRow"></div>
+
+<div id="reading"></div>
+
+<footer>Cricket Tarot Reader · sample AI agent demo · 22-card deck</footer>
+
+<script>
+const DECK = {"deck_name": "Cricket Tarot", "description": "A 22-card Major Arcana deck reimagined through the lens of cricket \u2014 its rituals, roles, and turning points.", "cards": [{"id": 0, "name": "The Debutant", "traditional": "The Fool", "keywords": ["new beginnings", "nerves", "potential", "leap of faith"], "cricketMeaning": "Walking out to bat or bowl for the very first time, cap on, heart pounding, everything still to prove.", "upright": "A fresh start is here. Trust your instincts even though you haven't 'earned' the moment yet \u2014 everyone starts with a first over, a first innings. Take the guard and back yourself.", "reversed": "Recklessness or hesitation at the crease. You're either charging in without a plan or too scared to leave the changing room. Find the middle ground before you play the shot."}, {"id": 1, "name": "The Allrounder", "traditional": "The Magician", "keywords": ["resourcefulness", "versatility", "mastery of tools"], "cricketMeaning": "The player who can bat, bowl, and field with equal skill \u2014 turning whatever is at hand into a match-winning performance.", "upright": "You have everything you need already. Skills, timing, and opportunity are aligning \u2014 it's time to contribute with bat and ball, not wait to be picked for one role.", "reversed": "Spreading yourself too thin, or talent without application. A gifted player who never quite delivers. Focus on one skill and sharpen it."}, {"id": 2, "name": "The Wicketkeeper", "traditional": "The High Priestess", "keywords": ["intuition", "quiet awareness", "reading the game"], "cricketMeaning": "Standing behind the stumps, saying little, seeing everything \u2014 the game's quiet intelligence.", "upright": "Listen more than you speak. The answer you need isn't in noise or analysis \u2014 it's in the quiet read you already have on the situation. Trust the instinct behind the stumps.", "reversed": "Ignoring your gut, or overthinking a simple appeal. You're second-guessing what you already know. Go back to instinct."}, {"id": 3, "name": "The Home Ground", "traditional": "The Empress", "keywords": ["abundance", "comfort", "nurturing conditions", "growth"], "cricketMeaning": "A flat pitch, a friendly crowd, familiar conditions \u2014 everything set up for you to flourish.", "upright": "Conditions favor you right now. Let yourself be supported, grow into the innings, and don't rush what's naturally building in your favor.", "reversed": "Home comfort turning into complacency, or a supportive environment being taken for granted. Don't let easy conditions make you lazy."}, {"id": 4, "name": "The Captain", "traditional": "The Emperor", "keywords": ["leadership", "structure", "authority", "responsibility"], "cricketMeaning": "The one setting the field, making the calls, carrying the weight of every decision.", "upright": "Step up and take control. A situation needs your structure and decisiveness \u2014 set the field, make the call, own the outcome.", "reversed": "Over-control or rigid captaincy that stifles the team. You're micromanaging the field instead of trusting your bowlers. Loosen the grip."}, {"id": 5, "name": "The Coach", "traditional": "The Hierophant", "keywords": ["tradition", "mentorship", "learning the fundamentals"], "cricketMeaning": "The voice in the nets reminding you of technique, discipline, and the basics that never go out of style.", "upright": "Go back to fundamentals. A mentor, a coaching manual, or plain old discipline has the answer you're looking for. Respect the process.", "reversed": "Blindly following outdated advice, or rejecting all guidance out of stubbornness. Question the method, but don't throw out the technique entirely."}, {"id": 6, "name": "The Partnership", "traditional": "The Lovers", "keywords": ["connection", "choice", "trust between two"], "cricketMeaning": "Two batsmen at the crease, running on trust, building something neither could alone.", "upright": "A relationship or collaboration is at a turning point \u2014 commit to it fully. Communicate clearly, run the singles, trust your partner.", "reversed": "A breakdown in communication \u2014 a mix-up, a run-out waiting to happen. Miscommunication is the real danger here, not the opposition."}, {"id": 7, "name": "The Chase", "traditional": "The Chariot", "keywords": ["determination", "momentum", "willpower", "victory through focus"], "cricketMeaning": "Batting under lights, required run rate climbing, nothing but forward momentum and nerve.", "upright": "Full steam ahead. You have the drive to pull this off \u2014 stay focused on the target and don't let doubt slow your running between the wickets.", "reversed": "Losing control of the chase \u2014 panicking, changing plans mid-over, or trying to do too much too fast. Reset and rebuild the required rate calmly."}, {"id": 8, "name": "The Anchor", "traditional": "Strength", "keywords": ["quiet resolve", "patience", "inner control"], "cricketMeaning": "The batsman who holds one end steady through a collapse, absorbing pressure without flinching.", "upright": "Real strength here is calm, not aggression. Hold your position, absorb the pressure, and let the storm around you pass without losing your composure.", "reversed": "Forcing control through stubbornness, or crumbling under pressure you tried to just 'tough out.' Strength without patience becomes brittle."}, {"id": 9, "name": "The Twelfth Man", "traditional": "The Hermit", "keywords": ["reflection", "solitude", "waiting your turn"], "cricketMeaning": "Watching from the boundary, drinks tray in hand, learning the game from the outside looking in.", "upright": "Step back and observe before acting. This is a season for quiet reflection, not center stage \u2014 your moment will come, use this time to prepare.", "reversed": "Isolating yourself when you should be engaging, or feeling permanently overlooked. Don't mistake being benched for being forgotten."}, {"id": 10, "name": "The Toss", "traditional": "Wheel of Fortune", "keywords": ["luck", "turning point", "cycles", "chance"], "cricketMeaning": "The coin spinning in the air before a ball is bowled \u2014 fortune's first, unearned decision of the day.", "upright": "Circumstances beyond your control are about to shift. A change of luck is coming \u2014 win or lose the toss, what matters is how you play the conditions you're given.", "reversed": "A run of bad luck, or blaming fortune for outcomes you could still influence. The toss is only the start of the story, not the whole match."}, {"id": 11, "name": "The Umpire", "traditional": "Justice", "keywords": ["fairness", "accountability", "clear decisions"], "cricketMeaning": "The final word on every appeal \u2014 impartial, deliberate, bound by the laws of the game.", "upright": "A fair and honest decision is needed, from you or about you. Trust the process, accept the outcome, and act with integrity even when it costs you.", "reversed": "An unfair call, or refusing to accept a decision that's already been made. Dwelling on a bad decision only costs you the next ball."}, {"id": 12, "name": "The Rain Delay", "traditional": "The Hanged Man", "keywords": ["pause", "surrender", "new perspective"], "cricketMeaning": "Covers on, players off, the match suspended in limbo \u2014 nothing to do but wait and see it differently.", "upright": "Progress is paused for a reason. Use this stoppage to see the situation from a new angle rather than fighting the delay. Sometimes waiting is the move.", "reversed": "Resisting a necessary pause, or staying stuck in limbo long after play could resume. Don't let the delay become an excuse to stall."}, {"id": 13, "name": "The Run Out", "traditional": "Death", "keywords": ["sudden ending", "transformation", "letting go"], "cricketMeaning": "Gone in an instant, no warning, no half-measures \u2014 one end of something, the start of another.", "upright": "An abrupt ending is clearing space for what's next. Don't fight the finish \u2014 a chapter is closing so a new innings can begin.", "reversed": "Refusing to accept something is over, dragging out an ending that's already happened. Walk off before you're given out."}, {"id": 14, "name": "The Declaration", "traditional": "Temperance", "keywords": ["balance", "timing", "moderation"], "cricketMeaning": "The captain choosing exactly the right moment to stop batting \u2014 not too early, not too greedy.", "upright": "Balance and good timing matter more than pushing for more. You have enough \u2014 declare, and set up the next phase from a position of strength.", "reversed": "Bad timing \u2014 declaring too early out of impatience, or batting on too long out of greed. Reassess what 'enough' actually looks like."}, {"id": 15, "name": "The Sledge", "traditional": "The Devil", "keywords": ["temptation", "ego", "bad habits", "provocation"], "cricketMeaning": "Words from the slip cordon designed to get in your head \u2014 a test of what you'll let control you.", "upright": "Something is baiting your ego \u2014 a rivalry, a grudge, a bad habit dressed up as competitive fire. Notice what's pulling your focus off the game.", "reversed": "Breaking free from a temptation or toxic pattern that's had a grip on you. You're learning to let the sledging go unanswered."}, {"id": 16, "name": "The Collapse", "traditional": "The Tower", "keywords": ["sudden disruption", "upheaval", "forced change"], "cricketMeaning": "Five wickets in five overs \u2014 the innings falling apart faster than anyone expected.", "upright": "A sudden, disruptive event is dismantling something that looked stable. It's disorienting, but it's clearing out what wasn't built to last anyway.", "reversed": "Fearing a collapse that hasn't happened yet, or narrowly avoiding one. Don't let anxiety about falling apart cost you the innings that's still in front of you."}, {"id": 17, "name": "The Comeback", "traditional": "The Star", "keywords": ["hope", "renewal", "healing", "quiet faith"], "cricketMeaning": "Returning to the field after injury or a lean patch, quietly rebuilding form and belief.", "upright": "Hope is well placed here. After a difficult stretch, healing and form are genuinely returning \u2014 trust the quiet signs of recovery.", "reversed": "Losing faith just before the turnaround, or rushing the comeback before you're truly ready. Give the recovery the time it needs."}, {"id": 18, "name": "The Floodlights", "traditional": "The Moon", "keywords": ["uncertainty", "illusion", "dew factor", "unclear conditions"], "cricketMeaning": "A day-night match under lights and dew \u2014 the ball behaving strangely, nothing quite as it seems.", "upright": "Things aren't fully clear right now, and that's okay. Move carefully through the uncertainty rather than assuming you can read conditions you can't yet see.", "reversed": "Confusion lifting, or anxiety about the unknown that's bigger than the situation warrants. The dew will settle \u2014 don't panic-bowl at shadows."}, {"id": 19, "name": "The Century", "traditional": "The Sun", "keywords": ["success", "joy", "vindication", "clarity"], "cricketMeaning": "Bat raised to the crowd, three figures on the board \u2014 pure, uncomplicated triumph.", "upright": "Genuine success and joy are here, earned and deserved. Let yourself enjoy this moment fully \u2014 no caveats needed.", "reversed": "Success that feels hollow, or joy you're not allowing yourself to feel. Don't undersell a century just because it wasn't a double."}, {"id": 20, "name": "The Review", "traditional": "Judgement", "keywords": ["reckoning", "second chances", "calling back"], "cricketMeaning": "Bat tucked under the arm, waiting on the big screen \u2014 a decision from the past being revisited and made right.", "upright": "A past decision is being reconsidered, and you may get the reprieve you've been hoping for. Trust the review process and be honest about what really happened.", "reversed": "Refusing to review your own mistakes, or burning a review on false hope. Be honest with yourself before you ask for a second look."}, {"id": 21, "name": "The World Cup", "traditional": "The World", "keywords": ["completion", "achievement", "wholeness", "arrival"], "cricketMeaning": "The trophy lifted, the long tournament finally complete \u2014 everything you worked for, whole and realized.", "upright": "A long cycle is reaching genuine completion. Whatever you've been building toward has arrived \u2014 take it in before starting the next campaign.", "reversed": "Something close to completion but not quite there \u2014 a final short of the boundary. Don't stop chasing just before the finish line."}]};
+
+const positions3 = ["Situation", "Challenge", "Advice"];
+const positions1 = ["Your Card"];
+
+let needed = 3;
+let pickedIndices = [];
+let orientations = [];
+
+const deckGrid = document.getElementById('deckGrid');
+const pickedRow = document.getElementById('pickedRow');
+const readingEl = document.getElementById('reading');
+const dealBtn = document.getElementById('dealBtn');
+const resetBtn = document.getElementById('resetBtn');
+const spreadSel = document.getElementById('spread');
+const qEl = document.getElementById('q');
+
+function buildDeckGrid(){
+  deckGrid.innerHTML = '';
+  DECK.cards.forEach((c, i) => {
+    const d = document.createElement('div');
+    d.className = 'card-back';
+    d.textContent = '🏏';
+    d.dataset.idx = i;
+    d.addEventListener('click', onPick);
+    deckGrid.appendChild(d);
+  });
+}
+
+function onPick(e){
+  if (pickedIndices.length >= needed) return;
+  const idx = parseInt(e.currentTarget.dataset.idx, 10);
+  if (pickedIndices.includes(idx)) return;
+  e.currentTarget.classList.add('picked');
+  const orientation = Math.random() < 0.75 ? 'upright' : 'reversed';
+  pickedIndices.push(idx);
+  orientations.push(orientation);
+  renderPicked();
+  if (pickedIndices.length === needed){
+    Array.from(deckGrid.children).forEach(c => c.classList.add('disabled'));
+    generateReading();
+  }
+}
+
+function renderPicked(){
+  pickedRow.innerHTML = '';
+  const labels = needed === 3 ? positions3 : positions1;
+  pickedIndices.forEach((idx, i) => {
+    const card = DECK.cards[idx];
+    const orient = orientations[i];
+    const el = document.createElement('div');
+    el.className = 'tcard';
+    el.innerHTML = `
+      <div class="pos">${labels[i]}</div>
+      <div class="name">${card.name}</div>
+      <div class="orient">${orient === 'upright' ? 'Upright' : 'Reversed'}</div>
+      <div class="trad">(${card.traditional})</div>
+    `;
+    pickedRow.appendChild(el);
+  });
+}
+
+async function generateReading(){
+  const labels = needed === 3 ? positions3 : positions1;
+
+  readingEl.style.display = 'block';
+  readingEl.innerHTML = `<h2>Your Reading</h2><p class="loading">Consulting the pitch report… this can take a few seconds.</p>`;
+  readingEl.scrollIntoView({behavior:'smooth', block:'nearest'});
+
+  const cardsPayload = pickedIndices.map((idx, i) => {
+    const card = DECK.cards[idx];
+    const orient = orientations[i];
+    return {
+      position: labels[i],
+      name: card.name,
+      traditional: card.traditional,
+      orientation: orient,
+      cricketMeaning: card.cricketMeaning,
+      upright: card.upright,
+      reversed: card.reversed
+    };
+  });
+
+  try {
+    const resp = await fetch('/.netlify/functions/reading', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: qEl.value.trim(), cards: cardsPayload })
+    });
+    const data = await resp.json();
+    if (!resp.ok) {
+      throw new Error(data.error || `Request failed (${resp.status})`);
+    }
+    const paragraphs = data.reading
+      .split(/\n\s*\n/)
+      .map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`)
+      .join('');
+    readingEl.innerHTML = `<h2>Your Reading</h2>${paragraphs}`;
+  } catch (err) {
+    readingEl.innerHTML = `<h2>Your Reading</h2><p class="error">Couldn't reach the pitch report: ${err.message}</p><p class="loading">If this is a fresh deploy, make sure OPENROUTER_API_KEY is set under Site configuration → Environment variables in Netlify, then redeploy.</p>`;
+  }
+}
+
+function resetAll(){
+  pickedIndices = [];
+  orientations = [];
+  needed = parseInt(spreadSel.value, 10);
+  readingEl.style.display = 'none';
+  readingEl.innerHTML = '';
+  pickedRow.innerHTML = '';
+  buildDeckGrid();
+}
+
+dealBtn.addEventListener('click', resetAll);
+resetBtn.addEventListener('click', () => { qEl.value=''; resetAll(); });
+spreadSel.addEventListener('change', resetAll);
+
+resetAll();
+</script>
+
+</body>
+</html>
