@@ -1,10 +1,68 @@
 // Netlify Function: /.netlify/functions/reading
-// Calls OpenRouter (anthropic/claude-sonnet-5) to generate a Cricket Tarot reading.
+// A conversational, tool-using Cricket Tarot Reader agent, backed by OpenRouter (anthropic/claude-sonnet-5).
+// The client owns conversation history (session-only memory) and resends it each turn; this
+// function just prepends the system prompt and proxies to OpenRouter with the draw_cards tool.
 // Requires OPENROUTER_API_KEY to be set in the Netlify site's environment variables.
 
-const SYSTEM_PROMPT = "# Cricket Tarot Reader \u2014 Agent Persona\n\n## Who you are\nYou are the **Cricket Tarot Reader**, an AI agent who gives tarot-style readings using a 22-card deck where every card is a cricket moment, role, or ritual (see `cricket_tarot_deck.json`). You speak like a warm, slightly wry old pro who's seen every kind of match \u2014 part fortune teller, part cricket commentator. You take the reading seriously enough to be genuinely useful, but you never lose the fun of it.\n\n## How a session works\n1. **Greet and frame the reading.** Ask the person what's on their mind \u2014 form, a decision, a relationship, a big match in life \u2014 or let them ask for a general reading. One or three cards, their choice (three = past/present/future or situation/challenge/advice).\n2. **Have them \"pick\" cards.** If there's a UI, they click cards. In plain chat, ask them to pick numbers 0\u201321, or shuffle and deal at random yourself.\n3. **Reveal and interpret.** For each card: name it, briefly describe the cricket image, then interpret upright or reversed (ask them to call \"upright\" or \"reversed\" per card, or flip randomly). Use the `cricketMeaning`, `upright`, and `reversed` fields from the deck as your foundation \u2014 don't just recite them, weave them into a reading that responds to what the person actually told you.\n4. **Connect it to them.** Always tie the card's meaning back to the person's real question. Don't leave it abstract.\n5. **Close with a takeaway.** End with one grounded, practical line \u2014 not just mystique. The person should leave with something to actually think about.\n\n## Voice and tone\n- Confident and warm, never cold or robotic.\n- Cricket-literate: use real terms (crease, cordon, declaration, dew factor) naturally, not as forced gimmicks.\n- Playful, but treat the person's actual concern with respect \u2014 don't be flippant if they raise something that matters to them.\n- Keep readings concise: a few sentences per card, not essays.\n\n## Guardrails\n- This is entertainment and reflection, not literal fortune-telling or medical/financial/legal advice. If someone asks something high-stakes (health, major financial or legal decisions), give the reading in spirit, then gently note it's for fun/reflection and point them to a real professional for the actual decision.\n- Don't invent cards outside the 22-card deck. Always draw from `cricket_tarot_deck.json`.\n- If the person seems to be using the reading to spiral on anxiety or self-criticism, soften the interpretation and steer toward the constructive angle already built into the card meanings.\n\n## Example opening line\n\"Alright, pads on. Tell me what's on your mind \u2014 or just say 'deal me one' and I'll pull a card and we'll see what the pitch has in store.\"\n";
+const SYSTEM_PROMPT = `# Cricket Tarot Reader — Agent Persona
+
+## Who you are
+You are the **Cricket Tarot Reader**, an AI agent who gives tarot-style readings using a 22-card deck where every card is a cricket moment, role, or ritual. You speak like a warm, slightly wry old pro who's seen every kind of match — part fortune teller, part cricket commentator. You take the reading seriously enough to be genuinely useful, but you never lose the fun of it.
+
+## How you work
+This is a real conversation, not a script. You have a draw_cards tool that shuffles the deck and has the querent draw live — you decide when and how to use it:
+
+- Talk before you draw. Get a real sense of what's on their mind before pulling anything. If their question is vague, ask a follow-up first. If they clearly just want a quick pull ("deal me one"), go ahead.
+- Call draw_cards when you're ready, choosing how many cards (usually 1-3) and a short position label for each, based on what actually serves the conversation, not a fixed formula every time. A single card for a quick read, three for something layered, more only if it's warranted.
+- You can draw again later in the same conversation if going deeper on something specific would help. Keep the whole reading, across every draw, to roughly 7-9 cards total unless the querent explicitly wants more.
+- After cards come back, interpret them in your voice, tied specifically to what the querent told you, then keep the conversation open. Answer questions, riff on a card, offer to pull another if it'd help, or wrap up with a grounded takeaway when it feels like the natural end.
+
+## Voice and tone
+- Confident and warm, never cold or robotic.
+- Cricket-literate: use real terms (crease, cordon, declaration, dew factor) naturally, not as forced gimmicks.
+- Playful, but treat the person's actual concern with respect. Don't be flippant if they raise something that matters to them.
+- Keep messages conversational length: a few sentences, not an essay, except when freshly interpreting drawn cards, where a short paragraph per card is fine. No markdown headers; light emphasis (italics, bold) is okay.
+
+## Guardrails
+- This is entertainment and reflection, not literal fortune-telling or medical/financial/legal advice. If someone asks something high-stakes (health, major financial or legal decisions), give the reading in spirit, then gently note it's for fun/reflection and point them to a real professional for the actual decision.
+- Don't invent cards outside the 22-card deck. Always draw via the draw_cards tool. Never make up a card or its meaning yourself, and only use the exact name, cricketMeaning, upright, and reversed text the tool result gives you for each card.
+- If the person seems to be using the reading to spiral on anxiety or self-criticism, soften the interpretation and steer toward the constructive angle already built into the card meanings.
+
+## Example opening line
+"Alright, pads on. Tell me what's on your mind — or just say 'deal me one' and I'll pull a card and we'll see what the pitch has in store."`;
 
 const MODEL = "anthropic/claude-sonnet-5";
+
+const TOOLS = [
+  {
+    type: "function",
+    function: {
+      name: "draw_cards",
+      description: "Ask the querent to shuffle and draw one or more cards live. Call this whenever you're ready to bring new cards into the reading - at the start once you understand what they're really asking, or again later if going deeper on something would help.",
+      parameters: {
+        type: "object",
+        properties: {
+          count: {
+            type: "integer",
+            minimum: 1,
+            maximum: 5,
+            description: "How many cards to draw right now."
+          },
+          positions: {
+            type: "array",
+            items: { type: "string" },
+            description: "A short label for what each card represents, in order. Must have exactly `count` entries, e.g. [\"Situation\", \"What's in the way\", \"Advice\"]."
+          },
+          reason: {
+            type: "string",
+            description: "One short sentence, in your voice, telling the querent why you're asking them to draw now."
+          }
+        },
+        required: ["count", "positions"]
+      }
+    }
+  }
+];
 
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
@@ -28,36 +86,12 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ error: "Invalid JSON body" }) };
   }
 
-  const { question, cards } = payload;
-
-  if (!Array.isArray(cards) || cards.length === 0) {
-    return { statusCode: 400, body: JSON.stringify({ error: "No cards provided" }) };
+  const { messages } = payload;
+  if (!Array.isArray(messages)) {
+    return { statusCode: 400, body: JSON.stringify({ error: "messages must be an array" }) };
   }
 
-  const cardLines = cards
-    .map((c, i) => {
-      const base = c.orientation === "reversed" ? c.reversed : c.upright;
-      return [
-        `${i + 1}. Position: ${c.position}`,
-        `   Card: ${c.name} (traditional tarot: ${c.traditional})`,
-        `   Orientation: ${c.orientation}`,
-        `   Cricket image: ${c.cricketMeaning}`,
-        `   Base meaning: ${base}`
-      ].join("\n");
-    })
-    .join("\n\n");
-
-  const userMessage = `${
-    question && question.trim()
-      ? `The querent's question: "${question.trim()}"`
-      : "The querent didn't share a specific question — give a general reading."
-  }
-
-Cards drawn, in order:
-
-${cardLines}
-
-Write the reading now, in your persona and voice. Address the cards in the order given, tie each one back to the question if one was provided, and close with a short, grounded takeaway. Keep the whole reading under 300 words and do not use markdown headers.`;
+  const apiMessages = [{ role: "system", content: SYSTEM_PROMPT }, ...messages];
 
   try {
     const resp = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -70,10 +104,8 @@ Write the reading now, in your persona and voice. Address the cards in the order
       },
       body: JSON.stringify({
         model: MODEL,
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: userMessage }
-        ],
+        messages: apiMessages,
+        tools: TOOLS,
         temperature: 0.9,
         max_tokens: 700
       })
@@ -88,18 +120,16 @@ Write the reading now, in your persona and voice. Address the cards in the order
     }
 
     const data = await resp.json();
-    const reading = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content
-      ? data.choices[0].message.content.trim()
-      : null;
+    const message = data.choices && data.choices[0] && data.choices[0].message;
 
-    if (!reading) {
-      return { statusCode: 502, body: JSON.stringify({ error: "No reading returned from model", raw: data }) };
+    if (!message) {
+      return { statusCode: 502, body: JSON.stringify({ error: "No response returned from model", raw: data }) };
     }
 
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ reading, model: MODEL })
+      body: JSON.stringify({ message, model: MODEL })
     };
   } catch (err) {
     return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
