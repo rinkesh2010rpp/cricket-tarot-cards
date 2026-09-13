@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Cricket Tarot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&display=swap">
 <style>
   :root{
     --grass:#0b3d2e;
@@ -16,25 +18,62 @@
   body{
     margin:0;
     font-family:Georgia, 'Times New Roman', serif;
-    background:radial-gradient(ellipse at top, var(--grass2), var(--grass) 70%);
+    background:radial-gradient(120% 70% at 50% 0%, var(--grass2) 0%, var(--grass) 55%, #071a12 100%);
     color:var(--cream);
     min-height:100vh;
     padding:24px 16px 40px;
+    position:relative;
+  }
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    opacity:.05;
+    z-index:-1;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .kicker{
+    text-align:center;
+    font-size:.7rem;
+    letter-spacing:.32em;
+    text-transform:uppercase;
+    color:rgba(244,234,210,.55);
+    margin-bottom:10px;
   }
   h1{
     text-align:center;
-    font-size:2rem;
-    letter-spacing:2px;
-    margin-bottom:4px;
-    color:var(--gold);
-    text-shadow:0 2px 6px rgba(0,0,0,.4);
+    font-family:'Cormorant Garamond', Georgia, serif;
+    font-style:italic;
+    font-weight:600;
+    font-size:2.6rem;
+    letter-spacing:1px;
+    margin:0 0 6px;
+    background:linear-gradient(180deg, #f0d9a0 0%, var(--gold) 55%, #b9863a 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
   }
+  .divider{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    margin:14px 0 18px;
+  }
+  .divider span{
+    width:46px; height:1px;
+    background:linear-gradient(90deg, transparent, rgba(217,164,65,.7));
+  }
+  .divider span.right{ background:linear-gradient(90deg, rgba(217,164,65,.7), transparent); }
+  .divider svg{ width:11px; height:11px; }
   .subtitle{
     text-align:center;
     color:var(--cream);
-    opacity:.8;
-    margin-bottom:22px;
+    opacity:.85;
+    margin-bottom:0;
     font-style:italic;
+    font-size:1.05rem;
   }
 
   .chat-shell{
@@ -150,20 +189,23 @@
   .card-back{
     aspect-ratio:2/3;
     border-radius:6px;
-    background:
-      repeating-linear-gradient(45deg, rgba(217,164,65,.15) 0 5px, transparent 5px 10px),
-      linear-gradient(160deg, var(--red), #5e1f1f);
-    border:2px solid var(--gold);
+    background:radial-gradient(120% 100% at 50% 12%, var(--grass2) 0%, #0a2118 75%);
+    border:1.5px solid rgba(217,164,65,.65);
+    box-shadow:inset 0 0 0 3px rgba(0,0,0,.25), inset 0 0 0 4px rgba(217,164,65,.18);
     display:flex;
     align-items:center;
     justify-content:center;
+    padding:18%;
     cursor:pointer;
     color:var(--gold);
-    font-size:.8rem;
-    transition:transform .15s ease;
+    transition:transform .15s ease, box-shadow .15s ease;
     user-select:none;
   }
-  .card-back:hover{ transform:translateY(-3px); }
+  .card-back svg{ width:100%; height:100%; display:block; }
+  .card-back:hover{
+    transform:translateY(-3px);
+    box-shadow:inset 0 0 0 3px rgba(0,0,0,.25), inset 0 0 0 4px rgba(217,164,65,.3), 0 6px 16px -6px rgba(217,164,65,.45);
+  }
   .card-back.picked{
     opacity:.25;
     cursor:default;
@@ -184,20 +226,14 @@
 
   .drawn-row{
     display:flex;
-    gap:12px;
+    gap:14px;
     justify-content:center;
     flex-wrap:wrap;
-    margin-top:12px;
+    margin-top:14px;
   }
   .tcard{
-    width:128px;
-    background:var(--cream);
-    color:var(--ink);
-    border-radius:9px;
-    border:3px solid var(--gold);
-    padding:10px 8px;
+    width:172px;
     text-align:center;
-    box-shadow:0 6px 14px rgba(0,0,0,.35);
     animation:flipin .5s ease;
   }
   @keyframes flipin{
@@ -206,34 +242,66 @@
   }
   .tcard .pos{
     font-size:.62rem;
-    letter-spacing:.5px;
+    letter-spacing:.08em;
     text-transform:uppercase;
-    color:var(--red);
-    margin-bottom:4px;
+    color:rgba(244,234,210,.6);
+    margin-bottom:6px;
   }
-  .tcard .name{
-    font-weight:bold;
-    font-size:.92rem;
-    margin-bottom:2px;
+  .tcard-face{
+    position:relative;
+    background:radial-gradient(120% 90% at 50% 14%, var(--grass2) 0%, #0a2118 72%);
+    border:1px solid rgba(217,164,65,.75);
+    box-shadow:inset 0 0 0 3px rgba(0,0,0,.3), inset 0 0 0 4px rgba(217,164,65,.22), 0 10px 22px -10px rgba(0,0,0,.6);
+    border-radius:10px;
+    padding:14px 10px 12px;
   }
-  .tcard .orient{
-    font-size:.7rem;
+  .tcard-badge{
+    width:34px; height:34px;
+    margin:0 auto 8px;
+    border-radius:50%;
+    border:1px solid rgba(217,164,65,.75);
+    background:rgba(0,0,0,.2);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Cormorant Garamond', Georgia, serif;
     font-style:italic;
-    opacity:.75;
-    margin-bottom:5px;
+    font-size:.7rem;
+    color:var(--gold);
   }
-  .tcard .trad{
-    font-size:.62rem;
-    opacity:.55;
-  }
-  .tcard .kind{
-    margin-top:5px;
-    font-size:.56rem;
-    letter-spacing:.6px;
+  .tcard-medallion{ width:64px; height:64px; margin:0 auto 8px; }
+  .tcard-name{
+    font-family:'Cormorant Garamond', Georgia, serif;
+    font-weight:600;
     text-transform:uppercase;
-    color:var(--red);
-    opacity:.75;
+    letter-spacing:.04em;
+    font-size:.92rem;
+    color:#f0dcae;
+    line-height:1.25;
+    margin-bottom:6px;
+    min-height:2.4em;
+    display:flex;
+    align-items:center;
+    justify-content:center;
   }
+  .tcard-orient{
+    display:inline-block;
+    font-size:.6rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--ink);
+    background:var(--gold);
+    padding:2px 8px;
+    border-radius:999px;
+    margin-bottom:6px;
+  }
+  .tcard-meta{
+    font-size:.6rem;
+    letter-spacing:.02em;
+    color:rgba(244,234,210,.55);
+  }
+  .seam-mark{ display:block; }
+  .seam-mark circle{ fill:none; stroke:var(--gold); stroke-width:2.2; }
+  .seam-mark .seam-inner{ stroke:rgba(217,164,65,.4); stroke-width:1; }
+  .seam-mark .seam-stitch{ fill:none; stroke:var(--red); stroke-width:2.6; opacity:.85; }
 
   .composer{
     display:flex;
@@ -330,8 +398,10 @@
 
 <button id="soundBtn" class="sound-toggle" title="Sound on/off" aria-label="Toggle sound">🔊</button>
 
+<div class="kicker">A Tarot for the Pitch</div>
 <h1>🏏 Cricket Tarot</h1>
 <div class="subtitle">Let the universe speak to you in the language of cricket.</div>
+<div class="divider"><span></span><svg viewBox="0 0 14 14"><path d="M7,0 L14,7 L7,14 L0,7 Z" fill="none" stroke="#d9a441" stroke-width="1"/></svg><span class="right"></span></div>
 
 <div class="chat-shell">
   <div class="chat-log" id="chatLog"></div>
@@ -494,6 +564,33 @@ function renderMarkdown(raw){
 function jitter(){ return (Math.random() * 16 - 8) + 'px'; }
 function jitterDeg(){ return (Math.random() * 16 - 8) + 'deg'; }
 
+function seamMarkSVG(){
+  return `<svg class="seam-mark" viewBox="0 0 100 100" aria-hidden="true">
+    <circle cx="50" cy="50" r="44"/>
+    <circle class="seam-inner" cx="50" cy="50" r="36"/>
+    <path class="seam-stitch" d="M50,8 C68,26 32,40 50,50 C68,60 32,74 50,92"/>
+  </svg>`;
+}
+
+function toRoman(num){
+  if (num === 0) return '0';
+  const map = [[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']];
+  let n = num, out = '';
+  for (const [v, sym] of map){ while (n >= v){ out += sym; n -= v; } }
+  return out;
+}
+
+const RANK_BADGE = {
+  Ace:'A', Two:'2', Three:'3', Four:'4', Five:'5',
+  Six:'6', Seven:'7', Eight:'8', Nine:'9', Ten:'10',
+  'The Colt':'C', 'The Quick':'Q', 'The Senior Pro':'SP', 'The Great':'G'
+};
+
+function rankBadge(card){
+  if (!card.suit) return toRoman(card.id);
+  return RANK_BADGE[card.rank] || card.rank;
+}
+
 function scrollToBottom(){
   chatLog.scrollTop = chatLog.scrollHeight;
 }
@@ -603,7 +700,7 @@ async function handleToolCall(toolCall){
   DECK.cards.forEach((c, i) => {
     const d = document.createElement('div');
     d.className = 'card-back shuffle';
-    d.textContent = '🏏';
+    d.innerHTML = seamMarkSVG();
     d.dataset.idx = i;
     ['1','2','3','4'].forEach(n => {
       d.style.setProperty(`--sx${n}`, jitter());
@@ -644,11 +741,14 @@ async function handleToolCall(toolCall){
         const t = document.createElement('div');
         t.className = 'tcard';
         t.innerHTML = `
-          <div class="pos">${position}</div>
-          <div class="name">${card.name}</div>
-          <div class="orient">${orientation === 'upright' ? 'Upright' : 'Reversed'}</div>
-          <div class="trad">(${card.traditional})</div>
-          <div class="kind">${kindLabel}</div>
+          <div class="pos">${escapeHtml(position)}</div>
+          <div class="tcard-face">
+            <div class="tcard-badge">${escapeHtml(rankBadge(card))}</div>
+            <div class="tcard-medallion">${seamMarkSVG()}</div>
+            <div class="tcard-name">${escapeHtml(card.name)}</div>
+            <div class="tcard-orient">${orientation === 'upright' ? 'Upright' : 'Reversed'}</div>
+            <div class="tcard-meta">${escapeHtml(kindLabel)} &middot; ${escapeHtml(card.traditional)}</div>
+          </div>
         `;
         drawnRow.appendChild(t);
         scrollToBottom();
