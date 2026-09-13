@@ -1,6 +1,18 @@
 {
   "deck_name": "Cricket Tarot",
-  "description": "A 22-card Major Arcana deck reimagined through the lens of cricket — its rituals, roles, and turning points.",
+  "description": "A full 78-card tarot deck reimagined through the lens of cricket. 22 Major Arcana of the game's rituals and turning points, plus 56 Minor Arcana across four suits: Bats (drive and ambition), Caps (feeling and belonging), Seam (mind and conflict), and Stumps (graft and results). Each suit runs Ace to Ten plus four court cards: the Colt, the Quick, the Senior Pro, and the Great.",
+  "suits": {
+    "Bats": { "traditional": "Wands", "element": "Fire", "theme": "drive, ambition, momentum, enterprise, attacking intent" },
+    "Caps": { "traditional": "Cups", "element": "Water", "theme": "emotion, relationships, belonging, intuition" },
+    "Seam": { "traditional": "Swords", "element": "Air", "theme": "mind, strategy, conflict, hard truths, communication" },
+    "Stumps": { "traditional": "Pentacles", "element": "Earth", "theme": "graft, results, security, the body, the tangible" }
+  },
+  "courts": {
+    "The Colt": "Page — the learner, the fresh prospect, curiosity and news",
+    "The Quick": "Knight — the mover, pursuit and momentum, action for better or worse",
+    "The Senior Pro": "Queen — mastery held inward, the dressing-room voice, leading by example",
+    "The Great": "King — mastery turned outward, command, authority and legacy"
+  },
   "cards": [
     {
       "id": 0,
@@ -199,6 +211,626 @@
       "cricketMeaning": "The trophy lifted, the long tournament finally complete — everything you worked for, whole and realized.",
       "upright": "A long cycle is reaching genuine completion. Whatever you've been building toward has arrived — take it in before starting the next campaign.",
       "reversed": "Something close to completion but not quite there — a final short of the boundary. Don't stop chasing just before the finish line."
+    },
+
+    {
+      "id": 22,
+      "name": "Ace of Bats",
+      "suit": "Bats",
+      "rank": "Ace",
+      "traditional": "Ace of Wands",
+      "keywords": ["spark", "new drive", "raw potential", "the itch to attack"],
+      "cricketMeaning": "The ball middled straight back past the bowler off the first delivery — a jolt of pure intent, an innings that wants to happen.",
+      "upright": "A burst of energy and ambition is being handed to you. Something wants to be started. Don't overthink it — take guard and swing through the line.",
+      "reversed": "A false start, or drive with nowhere to go. You're fired up but swinging at everything, or the spark's fizzled before you left the crease. Wait for a ball worth playing."
+    },
+    {
+      "id": 23,
+      "name": "Two of Bats",
+      "suit": "Bats",
+      "rank": "Two",
+      "traditional": "Two of Wands",
+      "keywords": ["planning the innings", "weighing options", "first move made"],
+      "cricketMeaning": "Standing at the crease after one solid shot, looking around the field, deciding how the innings is going to be built.",
+      "upright": "You've made the first move and now you're mapping the rest. This is the moment to choose your approach deliberately rather than just reacting ball to ball.",
+      "reversed": "Analysis paralysis at the crease. You're so busy planning the perfect innings that you're playing every ball for time. Pick a plan and commit."
+    },
+    {
+      "id": 24,
+      "name": "Three of Bats",
+      "suit": "Bats",
+      "rank": "Three",
+      "traditional": "Three of Wands",
+      "keywords": ["momentum building", "looking downfield", "help on the way"],
+      "cricketMeaning": "Mid-innings, the running is sharp, the gaps are opening, and you can see the total you're heading for.",
+      "upright": "Early effort is starting to pay off. Keep looking for the singles and trust that what you've set in motion is coming good. Support is closer than you think.",
+      "reversed": "Plans stalling, a partner not backing up, momentum leaking away. Something you expected to arrive hasn't. Check what's actually holding it up before you push harder."
+    },
+    {
+      "id": 25,
+      "name": "Four of Bats",
+      "suit": "Bats",
+      "rank": "Four",
+      "traditional": "Four of Wands",
+      "keywords": ["milestone", "a settled base", "the dressing room on its feet"],
+      "cricketMeaning": "The fifty raised, bat lifted to a standing pavilion, a partnership that's given the innings a proper foundation.",
+      "upright": "A stable, happy milestone. Take the applause, enjoy the homecoming, and appreciate the base you've built with people around you.",
+      "reversed": "The celebration feels thinner than it should, or there's tension behind the smiles in the camp. Mark the milestone honestly rather than performing it."
+    },
+    {
+      "id": 26,
+      "name": "Five of Bats",
+      "suit": "Bats",
+      "rank": "Five",
+      "traditional": "Five of Wands",
+      "keywords": ["friction", "competition for the strike", "scrappy rivalry"],
+      "cricketMeaning": "A net session that's turned into a contest, every batter wanting the throwdowns, everyone talking over each other.",
+      "upright": "Lots of competing energy and no clear order. It's messy, maybe even useful, but nothing gets built while everyone's fighting for the strike. Sort out who's on first.",
+      "reversed": "The squabble is either winding down or curdling into something personal. Decide which, and either make peace or step out of the net."
+    },
+    {
+      "id": 27,
+      "name": "Six of Bats",
+      "suit": "Bats",
+      "rank": "Six",
+      "traditional": "Six of Wands",
+      "keywords": ["recognition", "a win worth savouring", "chaired off"],
+      "cricketMeaning": "Carried off the ground on teammates' shoulders, the match-winning knock behind you, the crowd on their feet.",
+      "upright": "Public recognition you've genuinely earned. Accept it without deflecting — this is a moment of visible success and it's allowed to feel good.",
+      "reversed": "A win that rings false, praise you don't quite trust, or credit going to the wrong person. Check whether the acclaim matches the reality."
+    },
+    {
+      "id": 28,
+      "name": "Seven of Bats",
+      "suit": "Bats",
+      "rank": "Seven",
+      "traditional": "Seven of Wands",
+      "keywords": ["holding your ground", "defending a position", "outnumbered"],
+      "cricketMeaning": "Last recognised batter, farming the strike, shielding the tail while the opposition throws everything at you.",
+      "upright": "You're defending something and the odds are against you, but you have the higher ground. Stand firm, keep your shape, and make them earn every wicket.",
+      "reversed": "Worn down by the constant pressure, tempted to just give it away. Either dig back in properly or accept it's time to change your approach — half-defending helps no one."
+    },
+    {
+      "id": 29,
+      "name": "Eight of Bats",
+      "suit": "Bats",
+      "rank": "Eight",
+      "traditional": "Eight of Wands",
+      "keywords": ["speed", "rapid movement", "news arriving", "quick singles"],
+      "cricketMeaning": "The ball racing to the boundary, sharp singles turned into twos, everything happening at pace.",
+      "upright": "Things are moving fast and in your favour. Decisions land, messages arrive, the run rate climbs. Keep up and run hard — this window won't stay open long.",
+      "reversed": "Rushed shots and mix-ups. The pace has got away from you and you're playing catch-up. Slow the over down before someone gets run out."
+    },
+    {
+      "id": 30,
+      "name": "Nine of Bats",
+      "suit": "Bats",
+      "rank": "Nine",
+      "traditional": "Nine of Wands",
+      "keywords": ["battered but standing", "resilience", "one more push"],
+      "cricketMeaning": "Bruised on the arm and thigh, helmet dented, playing and missing — but still there, still guarding the stumps.",
+      "upright": "You've taken a battering and you're tired, but you're closer to the end of this than you think. Get behind one more ball. Don't give it away with the finish line in sight.",
+      "reversed": "Paranoia at the crease, flinching before the ball's bowled, refusing help out of exhaustion. The war's in your head now more than on the pitch. Ask someone to bat with you."
+    },
+    {
+      "id": 31,
+      "name": "Ten of Bats",
+      "suit": "Bats",
+      "rank": "Ten",
+      "traditional": "Ten of Wands",
+      "keywords": ["carrying the whole load", "burnout", "the weight of doing it all"],
+      "cricketMeaning": "Batting through the entire innings, bowling first change, keeping wicket in a pinch — dragging the team along on your own.",
+      "upright": "You're carrying more than one person should. The job's nearly done, so finish it — but notice that you took all of this on yourself, and ask whether you had to.",
+      "reversed": "The load is crushing you and it's time to put some of it down. Delegate, drop what isn't essential, or admit the innings can't all be yours."
+    },
+    {
+      "id": 32,
+      "name": "The Colt of Bats",
+      "suit": "Bats",
+      "rank": "The Colt",
+      "traditional": "Page of Wands",
+      "keywords": ["eager news", "a spark of an idea", "beginner's freedom"],
+      "cricketMeaning": "A raw academy slogger with more enthusiasm than plan, desperate to get out there and have a go.",
+      "upright": "An exciting idea or piece of news is arriving, still rough but full of life. Follow the enthusiasm and see where it leads before you talk yourself out of it.",
+      "reversed": "All talk and no footwork. Big declarations, restless energy, nothing actually started. Turn one of those ideas into a single concrete action."
+    },
+    {
+      "id": 33,
+      "name": "The Quick of Bats",
+      "suit": "Bats",
+      "rank": "The Quick",
+      "traditional": "Knight of Wands",
+      "keywords": ["bold action", "adventure", "charging down the track"],
+      "cricketMeaning": "Dances down the pitch to the quick bowler and launches it over long-on — thrilling, fearless, and one bad ball from disaster.",
+      "upright": "Time for a bold, committed move. Back yourself and go hard at the opportunity. Just make sure you've picked the right ball to attack.",
+      "reversed": "Recklessness dressed up as courage. Haring off in a new direction, burning hot and fading, leaving chaos behind. Channel the drive into something you'll still want tomorrow."
+    },
+    {
+      "id": 34,
+      "name": "The Senior Pro of Bats",
+      "suit": "Bats",
+      "rank": "The Senior Pro",
+      "traditional": "Queen of Wands",
+      "keywords": ["confident presence", "charisma", "leading by example"],
+      "cricketMeaning": "An attacking veteran who still takes bowlers apart and lights up the dressing room just by walking in.",
+      "upright": "Lead with warmth and self-assurance. People follow this energy naturally — set the tone by how you play, not by what you demand.",
+      "reversed": "Dominating the room, taking the game away from teammates, needing to be the one who wins it. Make space for others to have a bat."
+    },
+    {
+      "id": 35,
+      "name": "The Great of Bats",
+      "suit": "Bats",
+      "rank": "The Great",
+      "traditional": "King of Wands",
+      "keywords": ["bold vision", "natural authority", "setting the tone for a campaign"],
+      "cricketMeaning": "A batting legend who maps out a whole series in his head and makes the entire side believe it's possible.",
+      "upright": "You can see the big picture and rally people to it. Lead decisively, set an ambitious direction, and trust others to fill in the detail.",
+      "reversed": "Impatient, ruling by ego, all attack and no plan. Vision without follow-through, or a leader who won't hear a second opinion. Slow down and listen."
+    },
+
+    {
+      "id": 36,
+      "name": "Ace of Caps",
+      "suit": "Caps",
+      "rank": "Ace",
+      "traditional": "Ace of Cups",
+      "keywords": ["an offer of connection", "emotional new start", "an open heart"],
+      "cricketMeaning": "The first cap handed over before your debut, throat tight during the anthem — belonging offered, freely.",
+      "upright": "A new feeling, relationship, or sense of belonging is being offered to you. Let yourself receive it. Say yes to the connection before you rationalise it away.",
+      "reversed": "Feelings held back, an offer you can't quite accept, the anthem falling flat. Something's blocking the flow. Notice whether you're the one holding the tap shut."
+    },
+    {
+      "id": 37,
+      "name": "Two of Caps",
+      "suit": "Caps",
+      "rank": "Two",
+      "traditional": "Two of Cups",
+      "keywords": ["a bond of equals", "mutual respect", "a truce"],
+      "cricketMeaning": "Two players walking out to bat together, touching gloves mid-pitch, completely in each other's corner.",
+      "upright": "A genuine partnership — even, honest, mutual. Whether it's new love, a friendship, or peace made with a rival, both sides are pulling the same way.",
+      "reversed": "A partnership out of sync, a run-out between two people who should trust each other. The connection's real but the communication's off. Talk before you run."
+    },
+    {
+      "id": 38,
+      "name": "Three of Caps",
+      "suit": "Caps",
+      "rank": "Three",
+      "traditional": "Three of Cups",
+      "keywords": ["team celebration", "friendship", "a shared win"],
+      "cricketMeaning": "The whole side in a huddle at the close, arms round shoulders, belting out the team song.",
+      "upright": "Lean into your people. This is a time for celebration, community, and letting friends carry you along. A win shared is worth more.",
+      "reversed": "The huddle that leaves someone on the outside, or one too many nights out papering over something real. Check who's not in the circle, and why."
+    },
+    {
+      "id": 39,
+      "name": "Four of Caps",
+      "suit": "Caps",
+      "rank": "Four",
+      "traditional": "Four of Cups",
+      "keywords": ["apathy", "a missed offer", "taking your place for granted"],
+      "cricketMeaning": "Sitting on the boundary rope, arms folded, turning down a game of beach cricket because you can't be bothered.",
+      "upright": "You're so flat or so used to what you have that you're not seeing an offer right in front of you. Look up. Someone's holding out a cap.",
+      "reversed": "Coming out of the slump. The restlessness is lifting and you're ready to say yes to things again. Take the next invitation."
+    },
+    {
+      "id": 40,
+      "name": "Five of Caps",
+      "suit": "Caps",
+      "rank": "Five",
+      "traditional": "Five of Cups",
+      "keywords": ["dwelling on the drops", "grief", "what went wrong"],
+      "cricketMeaning": "Three catches shelled in a session, standing at slip staring at the grass, forgetting there are still catches to come.",
+      "upright": "You're focused on what's been lost or dropped. The disappointment is fair — but two chances are still standing behind you. Don't let the spilled ones cost you those too.",
+      "reversed": "Turning around to face what's still there. Acceptance is starting, the grief is loosening its grip. Pick the ball up and get ready for the next one."
+    },
+    {
+      "id": 41,
+      "name": "Six of Caps",
+      "suit": "Caps",
+      "rank": "Six",
+      "traditional": "Six of Cups",
+      "keywords": ["nostalgia", "kindness", "a gift from the past"],
+      "cricketMeaning": "Playing tapeball in the garden with the kids and a couple of old teammates, the game stripped back to pure fun.",
+      "upright": "Something warm from the past is worth revisiting — an old friend, a simpler version of the game, an act of kindness returned. Let it in.",
+      "reversed": "Living in the glory days, unable to bring that warmth into the present. Honour the memory, then come back to the innings you're actually playing."
+    },
+    {
+      "id": 42,
+      "name": "Seven of Caps",
+      "suit": "Caps",
+      "rank": "Seven",
+      "traditional": "Seven of Cups",
+      "keywords": ["too many choices", "wishful thinking", "sorting real from imagined"],
+      "cricketMeaning": "Staring at a wall of offers — county deals, franchise contracts, a coaching role — half of them mirages.",
+      "upright": "You have options, but some of them are fantasy. Get concrete: which of these actually exists, and which are you just enjoying imagining? Then choose one.",
+      "reversed": "The fog is clearing and one path is becoming obviously right. Commitment is close. Stop window-shopping and sign."
+    },
+    {
+      "id": 43,
+      "name": "Eight of Caps",
+      "suit": "Caps",
+      "rank": "Eight",
+      "traditional": "Eight of Cups",
+      "keywords": ["walking away", "an honest exit", "seeking something deeper"],
+      "cricketMeaning": "Packing your kit and leaving a club you love because something essential just isn't there anymore.",
+      "upright": "It's time to walk away from something that looks fine on paper but has quietly stopped feeding you. This is a brave, sad, necessary exit — make it cleanly.",
+      "reversed": "Staying out of fear, or bolting before you've really understood what's missing. Be honest about whether you're leaving or just running."
+    },
+    {
+      "id": 44,
+      "name": "Nine of Caps",
+      "suit": "Caps",
+      "rank": "Nine",
+      "traditional": "Nine of Cups",
+      "keywords": ["contentment", "a wish granted", "satisfaction"],
+      "cricketMeaning": "Feet up in the rooms after a match-winning innings, cold drink in hand, the day gone exactly as you'd have written it.",
+      "upright": "A wish is coming good and you're allowed to enjoy it. Take the satisfaction of a job done well — this is the pleasant, well-fed version of success.",
+      "reversed": "Smugness, or a wish that came true and didn't fill you up. Ask whether you were chasing the right thing, or just the look of it."
+    },
+    {
+      "id": 45,
+      "name": "Ten of Caps",
+      "suit": "Caps",
+      "rank": "Ten",
+      "traditional": "Ten of Cups",
+      "keywords": ["lasting harmony", "a settled home", "belonging"],
+      "cricketMeaning": "The whole club at the ground on a summer evening — players, families, juniors, sunset behind the sightscreen, everyone at home.",
+      "upright": "Emotional fulfilment that lasts, not just a good day. The relationships around you are solid and nourishing. This is what you were building toward.",
+      "reversed": "A picture-perfect setup with a hairline crack in it. The harmony is mostly real — tend to the small thing that isn't before it spreads."
+    },
+    {
+      "id": 46,
+      "name": "The Colt of Caps",
+      "suit": "Caps",
+      "rank": "The Colt",
+      "traditional": "Page of Cups",
+      "keywords": ["a heartfelt message", "creativity", "gentle news"],
+      "cricketMeaning": "A young player who feels the game deeply and leaves a handwritten note of thanks in a senior's kit bag.",
+      "upright": "A tender, creative, or sincere message is arriving — or wants to be sent by you. Follow the feeling even if it seems a bit soft. It'll land well.",
+      "reversed": "Moodiness, over-sensitivity, or a message you keep drafting and never send. The feeling's valid; the sulking isn't helping. Say the thing."
+    },
+    {
+      "id": 47,
+      "name": "The Quick of Caps",
+      "suit": "Caps",
+      "rank": "The Quick",
+      "traditional": "Knight of Cups",
+      "keywords": ["an invitation", "following the heart onto the field", "a romantic offer"],
+      "cricketMeaning": "A bowler chasing the one perfect spell of swing, playing on feel, turning up with a proposal in his eyes.",
+      "upright": "An offer or invitation led by feeling rather than logic is on its way. It's charming and sincere. Meet it with an open mind — just keep one foot on the ground.",
+      "reversed": "Grand romantic gestures built on air, promises that outrun reality, moods swinging the plan around. Ask for the substance behind the sweetness."
+    },
+    {
+      "id": 48,
+      "name": "The Senior Pro of Caps",
+      "suit": "Caps",
+      "rank": "The Senior Pro",
+      "traditional": "Queen of Cups",
+      "keywords": ["emotional intelligence", "compassion", "the heart of the dressing room"],
+      "cricketMeaning": "The player who always knows who's struggling before they say a word, and quietly sits next to them.",
+      "upright": "Lead with empathy. Your ability to read and hold other people's feelings is the strength here — use it, and trust your own emotional read of the situation.",
+      "reversed": "Carrying everyone else's weight until you're underwater, or using care as control. Put your own pads on first."
+    },
+    {
+      "id": 49,
+      "name": "The Great of Caps",
+      "suit": "Caps",
+      "rank": "The Great",
+      "traditional": "King of Cups",
+      "keywords": ["calm under pressure", "emotional mastery", "the diplomat"],
+      "cricketMeaning": "A veteran captain who stays serene when the chase gets tight and settles every dispute in the room without raising his voice.",
+      "upright": "Steady, warm authority. You can feel everything that's going on and still keep your head. Lead the emotional temperature of the group down, not up.",
+      "reversed": "Calm on the surface, churning underneath — or using that composure to manipulate. Let someone see what you're actually feeling."
+    },
+
+    {
+      "id": 50,
+      "name": "Ace of Seam",
+      "suit": "Seam",
+      "rank": "Ace",
+      "traditional": "Ace of Swords",
+      "keywords": ["breakthrough clarity", "a decisive idea", "cutting through"],
+      "cricketMeaning": "A delivery that pitches leg and hits the top of off — the unplayable ball, the truth that can't be argued with.",
+      "upright": "A moment of hard, clean clarity. You suddenly see the situation for what it is. Act on that insight now, while it's sharp, and say the true thing plainly.",
+      "reversed": "Muddled thinking, a clever plan that misfires, or using the truth like a bouncer aimed at the head. Get your own reasoning straight before you deliver it."
+    },
+    {
+      "id": 51,
+      "name": "Two of Seam",
+      "suit": "Seam",
+      "rank": "Two",
+      "traditional": "Two of Swords",
+      "keywords": ["stalemate", "a decision avoided", "an uneasy truce"],
+      "cricketMeaning": "Batter dug in on the back foot, playing everything with a dead bat, refusing to commit forward or back.",
+      "upright": "You're avoiding a choice by blocking every ball. It feels safe but the over isn't moving. You have more information than you're admitting — use it and decide.",
+      "reversed": "The deadlock breaks. A fact you were shutting out gets through, and the choice makes itself. Uncomfortable, but a relief."
+    },
+    {
+      "id": 52,
+      "name": "Three of Seam",
+      "suit": "Seam",
+      "rank": "Three",
+      "traditional": "Three of Swords",
+      "keywords": ["painful truth", "heartbreak", "clean bowled"],
+      "cricketMeaning": "Middle stump cartwheeling out of the ground, no doubt about it, the long walk back with the crowd silent.",
+      "upright": "Something hurts and there's no spinning it — a rejection, a betrayal, a hard piece of feedback that's landed. Feel it properly. Pretending you weren't bowled won't help.",
+      "reversed": "The sharpest of the pain is passing. You're starting to release the grievance and get back to the nets. Don't rush the healing, but do let it begin."
+    },
+    {
+      "id": 53,
+      "name": "Four of Seam",
+      "suit": "Seam",
+      "rank": "Four",
+      "traditional": "Four of Swords",
+      "keywords": ["necessary rest", "regrouping", "a mental time-out"],
+      "cricketMeaning": "Sitting out a session with the pads still on, lying back in a quiet corner of the rooms, letting the mind go still.",
+      "upright": "Stop. You need genuine rest before the next passage of play — not a holiday, just quiet. Step out of the contest and recover, guilt-free.",
+      "reversed": "Restlessness, or forcing yourself back onto the field before you've recovered. Either you won't let yourself rest or you've rested long enough — be honest which."
+    },
+    {
+      "id": 54,
+      "name": "Five of Seam",
+      "suit": "Seam",
+      "rank": "Five",
+      "traditional": "Five of Swords",
+      "keywords": ["a hollow victory", "conflict", "winning at a cost"],
+      "cricketMeaning": "Out-sledging the opposition all day and winning the game, then noticing your own dressing room has gone quiet.",
+      "upright": "You can win this argument, but count what it costs. A victory that leaves you isolated or the other person humiliated isn't worth much. Choose your battle.",
+      "reversed": "A chance to make amends after a fight that got out of hand. Someone's ready to walk it back — you can be the one who offers first."
+    },
+    {
+      "id": 55,
+      "name": "Six of Seam",
+      "suit": "Seam",
+      "rank": "Six",
+      "traditional": "Six of Swords",
+      "keywords": ["a transition to calmer conditions", "moving on", "gradual recovery"],
+      "cricketMeaning": "A quiet mid-season move to a new county, gear in the boot, heading somewhere the pitches are kinder.",
+      "upright": "You're moving away from a rough patch toward calmer water. It's not dramatic and you're not fully okay yet, but the direction is right. Keep going.",
+      "reversed": "Carrying the baggage with you, or a move that doesn't actually solve anything. Work out what you need to leave behind before you pack the car."
+    },
+    {
+      "id": 56,
+      "name": "Seven of Seam",
+      "suit": "Seam",
+      "rank": "Seven",
+      "traditional": "Seven of Swords",
+      "keywords": ["strategy", "cunning", "acting alone"],
+      "cricketMeaning": "Copying the opposition's bowling plans off the analyst's laptop while no one's watching, and slipping out unseen.",
+      "upright": "A situation calls for cleverness and discretion rather than a frontal contest. Move quietly, keep your own counsel — but be honest with yourself about whether this is smart or just sneaky.",
+      "reversed": "A scheme unravelling, or getting caught. The quiet approach has stopped working. Come clean before someone else does it for you."
+    },
+    {
+      "id": 57,
+      "name": "Eight of Seam",
+      "suit": "Seam",
+      "rank": "Eight",
+      "traditional": "Eight of Swords",
+      "keywords": ["feeling trapped", "self-imposed limits", "the door is open"],
+      "cricketMeaning": "Padded up in the pavilion, certain you can't bat on this surface — while the gate stands open and nobody's stopping you.",
+      "upright": "You feel boxed in, but most of the walls are in your head. List what's actually preventing you versus what you've just decided is impossible. The way out is closer than it looks.",
+      "reversed": "You're starting to see the exit. One assumption falls away and suddenly there's room to move. Take the first step out."
+    },
+    {
+      "id": 58,
+      "name": "Nine of Seam",
+      "suit": "Seam",
+      "rank": "Nine",
+      "traditional": "Nine of Swords",
+      "keywords": ["anxiety", "dread", "3am spiralling"],
+      "cricketMeaning": "Lying awake the night before a Test, replaying every dismissal you've ever had, each one worse in the dark.",
+      "upright": "Worry has taken over and it's bigger at night than the situation deserves. Write the fears down, say them out loud to someone. Most of them shrink in daylight.",
+      "reversed": "The worst of the dread is breaking. You're reaching out, getting perspective, realising the monster was mostly shadow. Keep talking about it."
+    },
+    {
+      "id": 59,
+      "name": "Ten of Seam",
+      "suit": "Seam",
+      "rank": "Ten",
+      "traditional": "Ten of Swords",
+      "keywords": ["a painful ending", "rock bottom", "but it's over"],
+      "cricketMeaning": "All ten wickets down, the innings folded for next to nothing, the scorecard a disaster — and nothing worse left to happen.",
+      "upright": "Something has ended badly and completely. It stings, but there's a strange relief in the finality: you can stop bracing now. The only way from here is up.",
+      "reversed": "A slow climb out of the wreckage, or a refusal to accept the innings is finished. Let it be over so you can start the next one."
+    },
+    {
+      "id": 60,
+      "name": "The Colt of Seam",
+      "suit": "Seam",
+      "rank": "The Colt",
+      "traditional": "Page of Swords",
+      "keywords": ["curiosity", "vigilance", "blunt news"],
+      "cricketMeaning": "A sharp-eyed young player who watches every opposition net and isn't shy about saying what he's spotted.",
+      "upright": "Stay alert and ask the pointed questions. New information is coming and it may be delivered bluntly. Gather facts before you form the plan.",
+      "reversed": "Gossip, spying, words used to cut rather than clarify. Sharp for the sake of it. Check your motive before you pass that on."
+    },
+    {
+      "id": 61,
+      "name": "The Quick of Seam",
+      "suit": "Seam",
+      "rank": "The Quick",
+      "traditional": "Knight of Swords",
+      "keywords": ["decisive action", "direct confrontation", "momentum through force"],
+      "cricketMeaning": "An express bowler who bangs the ball in short and backs it with a stare — all aggression, all forward.",
+      "upright": "Charge at the problem directly and fast. This is a moment for bold, uncompromising action. Just aim it — raw pace with no line goes for four.",
+      "reversed": "Aggression with no plan, steamrolling people, saying the cutting thing and calling it honesty. Slow your run-up and pick your target."
+    },
+    {
+      "id": 62,
+      "name": "The Senior Pro of Seam",
+      "suit": "Seam",
+      "rank": "The Senior Pro",
+      "traditional": "Queen of Swords",
+      "keywords": ["honest counsel", "clear boundaries", "independent judgement"],
+      "cricketMeaning": "The unsentimental senior who tells you exactly why you're getting out, whether you want to hear it or not.",
+      "upright": "Think clearly and speak straight. Cut sentiment out of the decision and see the situation as it is. Set the boundary you've been avoiding.",
+      "reversed": "Coldness, cutting remarks, a hardness that's tipped from honest into bitter. Clarity is still the goal — warmth doesn't have to be the price."
+    },
+    {
+      "id": 63,
+      "name": "The Great of Seam",
+      "suit": "Seam",
+      "rank": "The Great",
+      "traditional": "King of Swords",
+      "keywords": ["clear-eyed authority", "ethical rigour", "truth over comfort"],
+      "cricketMeaning": "A captain who leads by intellect and the laws of the game — brilliant, exacting, never plays favourites.",
+      "upright": "Lead with principle and logic. Make the fair call even when it's unpopular, hold the standard, and let the truth do the work rather than your rank.",
+      "reversed": "Harsh judgement, rule for rule's sake, using the truth as a weapon and calling it fairness. Ask whether you're being just or just being right."
+    },
+
+    {
+      "id": 64,
+      "name": "Ace of Stumps",
+      "suit": "Stumps",
+      "rank": "Ace",
+      "traditional": "Ace of Pentacles",
+      "keywords": ["a tangible opportunity", "security offered", "a seed worth planting"],
+      "cricketMeaning": "A first professional contract slid across the table, or the keys to a ground of your own — something solid to build on.",
+      "upright": "A concrete, practical opportunity is here: a job, a deal, a resource, a foundation. It's real and it has legs. Plant it properly and tend it.",
+      "reversed": "A shaky offer, a good opening missed, or a plan with no ground under it. Check whether the opportunity is as solid as it looks before you commit."
+    },
+    {
+      "id": 65,
+      "name": "Two of Stumps",
+      "suit": "Stumps",
+      "rank": "Two",
+      "traditional": "Two of Pentacles",
+      "keywords": ["juggling commitments", "adaptability", "managing the load"],
+      "cricketMeaning": "Holding down a day job, club cricket, and training, keeping every ball in the air with a grin.",
+      "upright": "You're balancing a lot and, for now, handling it. Stay light on your feet and keep prioritising ball by ball. Don't add a fourth thing to juggle.",
+      "reversed": "A ball's about to drop. You've overcommitted and the plates are wobbling. Decide what you're allowed to put down before it chooses for you."
+    },
+    {
+      "id": 66,
+      "name": "Three of Stumps",
+      "suit": "Stumps",
+      "rank": "Three",
+      "traditional": "Three of Pentacles",
+      "keywords": ["teamwork", "skill recognised", "building to a standard"],
+      "cricketMeaning": "Groundstaff, coach and captain crouched over the square together, each trade respected, planning the surface.",
+      "upright": "Good collaborative work where everyone's expertise counts. Ask for input, take the craft seriously, and build it to last. Your skill is being noticed.",
+      "reversed": "Cut corners, no one aligned, work done to just-about-passable. Slow down and get the people who know what they're doing back in the room."
+    },
+    {
+      "id": 67,
+      "name": "Four of Stumps",
+      "suit": "Stumps",
+      "rank": "Four",
+      "traditional": "Four of Pentacles",
+      "keywords": ["holding tight", "security", "risk aversion"],
+      "cricketMeaning": "Guarding your batting average, blocking every single delivery, refusing any shot that carries the slightest risk.",
+      "upright": "You're protecting what you've got — savings, a position, a reputation. Some caution is wise. But an innings of pure defence never wins a game.",
+      "reversed": "Clutching so hard nothing can flow — money, control, feelings. The grip itself has become the problem. Play one attacking shot and see that the sky doesn't fall."
+    },
+    {
+      "id": 68,
+      "name": "Five of Stumps",
+      "suit": "Stumps",
+      "rank": "Five",
+      "traditional": "Five of Pentacles",
+      "keywords": ["hardship", "insecurity", "feeling left out in the cold"],
+      "cricketMeaning": "Dropped off the contract list, kit bag on the pavement outside the members' bar, the warm room just the other side of the glass.",
+      "upright": "A stretch of real insecurity — money, work, health, or belonging. It's genuinely hard. But look around: there's help nearby, and asking for it isn't losing.",
+      "reversed": "Coming in from the cold. The lean patch is easing, support has been found, or you've finally knocked on the door. Recovery is underway."
+    },
+    {
+      "id": 69,
+      "name": "Six of Stumps",
+      "suit": "Stumps",
+      "rank": "Six",
+      "traditional": "Six of Pentacles",
+      "keywords": ["generosity", "fair exchange", "support given or received"],
+      "cricketMeaning": "A senior pro quietly paying for a young player's kit and travel, no fuss, no scoreboard kept.",
+      "upright": "Help is flowing in a fair direction — you're either well placed to give it or right to accept it. Keep the exchange clean and even.",
+      "reversed": "Strings attached, uneven giving, a favour held over your head. Check what the generosity is really costing before you take it — or before you offer it that way."
+    },
+    {
+      "id": 70,
+      "name": "Seven of Stumps",
+      "suit": "Stumps",
+      "rank": "Seven",
+      "traditional": "Seven of Pentacles",
+      "keywords": ["patience", "assessing the long game", "a pause to evaluate"],
+      "cricketMeaning": "Leaning on the bat handle at mid-pitch between overs, looking at a season's graft, weighing whether to stick with it.",
+      "upright": "Step back and honestly assess what your effort has grown so far. It may not be ready to harvest yet — patience is probably the answer, but check the plant is actually healthy.",
+      "reversed": "Impatience, or pulling out of a long investment right before it pays. Alternatively, throwing more time at something that was never going to grow. Be honest about which."
+    },
+    {
+      "id": 71,
+      "name": "Eight of Stumps",
+      "suit": "Stumps",
+      "rank": "Eight",
+      "traditional": "Eight of Pentacles",
+      "keywords": ["diligence", "mastery through repetition", "craftsmanship"],
+      "cricketMeaning": "Alone in the nets at dusk, grooving the same cover drive a thousand times until it's muscle memory.",
+      "upright": "Put the reps in. This is a time for focused, patient practice of your craft — unglamorous, repetitive, and exactly how the skill gets built. Keep going.",
+      "reversed": "Going through the motions, or perfectionism with no purpose. Either the work has gone soulless or you're polishing something no one needs polished. Reconnect it to the point."
+    },
+    {
+      "id": 72,
+      "name": "Nine of Stumps",
+      "suit": "Stumps",
+      "rank": "Nine",
+      "traditional": "Nine of Pentacles",
+      "keywords": ["earned reward", "independence", "enjoying the fruits"],
+      "cricketMeaning": "A well-deserved benefit year, strolling the outfield of a ground you helped build, comfortable in your own company.",
+      "upright": "You've done the work and now you get to enjoy what it produced — comfort, self-sufficiency, a bit of well-earned ease. Let yourself have it.",
+      "reversed": "Comfort that cost more than it was worth, or restlessness in the middle of plenty. Check whether the independence you fought for is actually the life you wanted."
+    },
+    {
+      "id": 73,
+      "name": "Ten of Stumps",
+      "suit": "Stumps",
+      "rank": "Ten",
+      "traditional": "Ten of Pentacles",
+      "keywords": ["legacy", "tradition", "family foundations"],
+      "cricketMeaning": "Three generations of the same family on the honours board, the pavilion named after a grandfather, the club an institution.",
+      "upright": "Long-term security and continuity — wealth, tradition, something built to outlast you. Think about what you're passing on, not just what you're holding.",
+      "reversed": "Legacy as a weight, family expectation as a cage, money without meaning. Honour where you came from without letting it bat your innings for you."
+    },
+    {
+      "id": 74,
+      "name": "The Colt of Stumps",
+      "suit": "Stumps",
+      "rank": "The Colt",
+      "traditional": "Page of Pentacles",
+      "keywords": ["study", "a practical opportunity", "reliable news"],
+      "cricketMeaning": "A diligent young pro rewatching footage late into the night, notebook full, in no rush and missing nothing.",
+      "upright": "A chance to learn something concrete or start something real is here. Do the homework, take it step by step, and treat the small opportunity seriously.",
+      "reversed": "Procrastination, all study and no time in the middle, or a plan that stays a plan forever. Set the books down and face a ball."
+    },
+    {
+      "id": 75,
+      "name": "The Quick of Stumps",
+      "suit": "Stumps",
+      "rank": "The Quick",
+      "traditional": "Knight of Pentacles",
+      "keywords": ["reliability", "hard work", "seeing a job through"],
+      "cricketMeaning": "A metronomic seamer who lands it on a coin all day, never spectacular, never collared, always exactly where you need him.",
+      "upright": "Slow, steady, dependable progress. Not exciting, but it works. Keep hitting your spot over after over and the job gets done.",
+      "reversed": "Stuck in the same groove past the point it's useful, resisting any change to the routine. Reliability has curdled into a rut. Try a different length."
+    },
+    {
+      "id": 76,
+      "name": "The Senior Pro of Stumps",
+      "suit": "Stumps",
+      "rank": "The Senior Pro",
+      "traditional": "Queen of Pentacles",
+      "keywords": ["pragmatism", "resourcefulness", "steady provision"],
+      "cricketMeaning": "The veteran who makes sure the young players are fed, housed, and match-ready, and still scores runs on Saturday.",
+      "upright": "Look after the practical needs — yours and the group's. Be resourceful, keep the environment secure and well-run, and lead by keeping everyone standing.",
+      "reversed": "So focused on results and logistics that the people get treated like line items. Provision without warmth. Ask how everyone's actually doing."
+    },
+    {
+      "id": 77,
+      "name": "The Great of Stumps",
+      "suit": "Stumps",
+      "rank": "The Great",
+      "traditional": "King of Pentacles",
+      "keywords": ["material mastery", "disciplined leadership", "lasting provision"],
+      "cricketMeaning": "A shrewd club-builder who took a struggling side, balanced the books, laid the square, and turned it into an institution.",
+      "upright": "You have the standing and the resources to build something durable. Lead with discipline and generosity, invest for the long term, and provide for the people who rely on you.",
+      "reversed": "Greed, status obsession, controlling people through money and security. Wealth hoarded rather than put to work. Loosen the grip and remember what it's for."
     }
   ]
 }

@@ -139,16 +139,19 @@
   }
   .draw-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(52px,1fr));
-    gap:7px;
-    max-width:460px;
+    grid-template-columns:repeat(auto-fill, minmax(40px,1fr));
+    gap:6px;
+    max-width:100%;
     margin:0 auto;
+    max-height:326px;
+    overflow-y:auto;
+    padding:2px;
   }
   .card-back{
     aspect-ratio:2/3;
-    border-radius:7px;
+    border-radius:6px;
     background:
-      repeating-linear-gradient(45deg, rgba(217,164,65,.15) 0 6px, transparent 6px 12px),
+      repeating-linear-gradient(45deg, rgba(217,164,65,.15) 0 5px, transparent 5px 10px),
       linear-gradient(160deg, var(--red), #5e1f1f);
     border:2px solid var(--gold);
     display:flex;
@@ -156,7 +159,7 @@
     justify-content:center;
     cursor:pointer;
     color:var(--gold);
-    font-size:.95rem;
+    font-size:.8rem;
     transition:transform .15s ease;
     user-select:none;
   }
@@ -223,6 +226,14 @@
     font-size:.62rem;
     opacity:.55;
   }
+  .tcard .kind{
+    margin-top:5px;
+    font-size:.56rem;
+    letter-spacing:.6px;
+    text-transform:uppercase;
+    color:var(--red);
+    opacity:.75;
+  }
 
   .composer{
     display:flex;
@@ -271,6 +282,42 @@
     padding:5px 12px;
   }
 
+  .sound-toggle{
+    position:fixed;
+    top:14px; right:14px;
+    background:rgba(0,0,0,.3);
+    border:1px solid rgba(217,164,65,.5);
+    color:var(--gold);
+    font-size:1rem;
+    font-weight:normal;
+    padding:6px 10px;
+    border-radius:8px;
+    z-index:6;
+  }
+  .sound-toggle.off{ opacity:.5; }
+
+  .spread-badge{
+    display:block;
+    width:fit-content;
+    margin:0 auto 8px;
+    background:rgba(217,164,65,.16);
+    border:1px solid rgba(217,164,65,.5);
+    color:var(--gold);
+    font-size:.66rem;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    padding:3px 11px;
+    border-radius:999px;
+  }
+  .draw-widget .reason{
+    text-align:center;
+    color:var(--cream);
+    opacity:.92;
+    font-size:.9rem;
+    font-style:italic;
+    margin-bottom:8px;
+  }
+
   footer{
     text-align:center;
     margin-top:20px;
@@ -280,6 +327,8 @@
 </style>
 </head>
 <body>
+
+<button id="soundBtn" class="sound-toggle" title="Sound on/off" aria-label="Toggle sound">🔊</button>
 
 <h1>🏏 Cricket Tarot</h1>
 <div class="subtitle">Let the universe speak to you in the language of cricket.</div>
@@ -295,14 +344,115 @@
   </div>
 </div>
 
-<footer>Cricket Tarot Reader · conversational AI agent demo · 22-card deck</footer>
+<footer>Cricket Tarot Reader · conversational AI agent demo · 78-card deck</footer>
 
 <script>
-const DECK = {"deck_name": "Cricket Tarot", "description": "A 22-card Major Arcana deck reimagined through the lens of cricket — its rituals, roles, and turning points.", "cards": [{"id": 0, "name": "The Debutant", "traditional": "The Fool", "keywords": ["new beginnings", "nerves", "potential", "leap of faith"], "cricketMeaning": "Walking out to bat or bowl for the very first time, cap on, heart pounding, everything still to prove.", "upright": "A fresh start is here. Trust your instincts even though you haven't 'earned' the moment yet — everyone starts with a first over, a first innings. Take the guard and back yourself.", "reversed": "Recklessness or hesitation at the crease. You're either charging in without a plan or too scared to leave the changing room. Find the middle ground before you play the shot."}, {"id": 1, "name": "The Allrounder", "traditional": "The Magician", "keywords": ["resourcefulness", "versatility", "mastery of tools"], "cricketMeaning": "The player who can bat, bowl, and field with equal skill — turning whatever is at hand into a match-winning performance.", "upright": "You have everything you need already. Skills, timing, and opportunity are aligning — it's time to contribute with bat and ball, not wait to be picked for one role.", "reversed": "Spreading yourself too thin, or talent without application. A gifted player who never quite delivers. Focus on one skill and sharpen it."}, {"id": 2, "name": "The Wicketkeeper", "traditional": "The High Priestess", "keywords": ["intuition", "quiet awareness", "reading the game"], "cricketMeaning": "Standing behind the stumps, saying little, seeing everything — the game's quiet intelligence.", "upright": "Listen more than you speak. The answer you need isn't in noise or analysis — it's in the quiet read you already have on the situation. Trust the instinct behind the stumps.", "reversed": "Ignoring your gut, or overthinking a simple appeal. You're second-guessing what you already know. Go back to instinct."}, {"id": 3, "name": "The Home Ground", "traditional": "The Empress", "keywords": ["abundance", "comfort", "nurturing conditions", "growth"], "cricketMeaning": "A flat pitch, a friendly crowd, familiar conditions — everything set up for you to flourish.", "upright": "Conditions favor you right now. Let yourself be supported, grow into the innings, and don't rush what's naturally building in your favor.", "reversed": "Home comfort turning into complacency, or a supportive environment being taken for granted. Don't let easy conditions make you lazy."}, {"id": 4, "name": "The Captain", "traditional": "The Emperor", "keywords": ["leadership", "structure", "authority", "responsibility"], "cricketMeaning": "The one setting the field, making the calls, carrying the weight of every decision.", "upright": "Step up and take control. A situation needs your structure and decisiveness — set the field, make the call, own the outcome.", "reversed": "Over-control or rigid captaincy that stifles the team. You're micromanaging the field instead of trusting your bowlers. Loosen the grip."}, {"id": 5, "name": "The Coach", "traditional": "The Hierophant", "keywords": ["tradition", "mentorship", "learning the fundamentals"], "cricketMeaning": "The voice in the nets reminding you of technique, discipline, and the basics that never go out of style.", "upright": "Go back to fundamentals. A mentor, a coaching manual, or plain old discipline has the answer you're looking for. Respect the process.", "reversed": "Blindly following outdated advice, or rejecting all guidance out of stubbornness. Question the method, but don't throw out the technique entirely."}, {"id": 6, "name": "The Partnership", "traditional": "The Lovers", "keywords": ["connection", "choice", "trust between two"], "cricketMeaning": "Two batsmen at the crease, running on trust, building something neither could alone.", "upright": "A relationship or collaboration is at a turning point — commit to it fully. Communicate clearly, run the singles, trust your partner.", "reversed": "A breakdown in communication — a mix-up, a run-out waiting to happen. Miscommunication is the real danger here, not the opposition."}, {"id": 7, "name": "The Chase", "traditional": "The Chariot", "keywords": ["determination", "momentum", "willpower", "victory through focus"], "cricketMeaning": "Batting under lights, required run rate climbing, nothing but forward momentum and nerve.", "upright": "Full steam ahead. You have the drive to pull this off — stay focused on the target and don't let doubt slow your running between the wickets.", "reversed": "Losing control of the chase — panicking, changing plans mid-over, or trying to do too much too fast. Reset and rebuild the required rate calmly."}, {"id": 8, "name": "The Anchor", "traditional": "Strength", "keywords": ["quiet resolve", "patience", "inner control"], "cricketMeaning": "The batsman who holds one end steady through a collapse, absorbing pressure without flinching.", "upright": "Real strength here is calm, not aggression. Hold your position, absorb the pressure, and let the storm around you pass without losing your composure.", "reversed": "Forcing control through stubbornness, or crumbling under pressure you tried to just 'tough out.' Strength without patience becomes brittle."}, {"id": 9, "name": "The Twelfth Man", "traditional": "The Hermit", "keywords": ["reflection", "solitude", "waiting your turn"], "cricketMeaning": "Watching from the boundary, drinks tray in hand, learning the game from the outside looking in.", "upright": "Step back and observe before acting. This is a season for quiet reflection, not center stage — your moment will come, use this time to prepare.", "reversed": "Isolating yourself when you should be engaging, or feeling permanently overlooked. Don't mistake being benched for being forgotten."}, {"id": 10, "name": "The Toss", "traditional": "Wheel of Fortune", "keywords": ["luck", "turning point", "cycles", "chance"], "cricketMeaning": "The coin spinning in the air before a ball is bowled — fortune's first, unearned decision of the day.", "upright": "Circumstances beyond your control are about to shift. A change of luck is coming — win or lose the toss, what matters is how you play the conditions you're given.", "reversed": "A run of bad luck, or blaming fortune for outcomes you could still influence. The toss is only the start of the story, not the whole match."}, {"id": 11, "name": "The Umpire", "traditional": "Justice", "keywords": ["fairness", "accountability", "clear decisions"], "cricketMeaning": "The final word on every appeal — impartial, deliberate, bound by the laws of the game.", "upright": "A fair and honest decision is needed, from you or about you. Trust the process, accept the outcome, and act with integrity even when it costs you.", "reversed": "An unfair call, or refusing to accept a decision that's already been made. Dwelling on a bad decision only costs you the next ball."}, {"id": 12, "name": "The Rain Delay", "traditional": "The Hanged Man", "keywords": ["pause", "surrender", "new perspective"], "cricketMeaning": "Covers on, players off, the match suspended in limbo — nothing to do but wait and see it differently.", "upright": "Progress is paused for a reason. Use this stoppage to see the situation from a new angle rather than fighting the delay. Sometimes waiting is the move.", "reversed": "Resisting a necessary pause, or staying stuck in limbo long after play could resume. Don't let the delay become an excuse to stall."}, {"id": 13, "name": "The Run Out", "traditional": "Death", "keywords": ["sudden ending", "transformation", "letting go"], "cricketMeaning": "Gone in an instant, no warning, no half-measures — one end of something, the start of another.", "upright": "An abrupt ending is clearing space for what's next. Don't fight the finish — a chapter is closing so a new innings can begin.", "reversed": "Refusing to accept something is over, dragging out an ending that's already happened. Walk off before you're given out."}, {"id": 14, "name": "The Declaration", "traditional": "Temperance", "keywords": ["balance", "timing", "moderation"], "cricketMeaning": "The captain choosing exactly the right moment to stop batting — not too early, not too greedy.", "upright": "Balance and good timing matter more than pushing for more. You have enough — declare, and set up the next phase from a position of strength.", "reversed": "Bad timing — declaring too early out of impatience, or batting on too long out of greed. Reassess what 'enough' actually looks like."}, {"id": 15, "name": "The Sledge", "traditional": "The Devil", "keywords": ["temptation", "ego", "bad habits", "provocation"], "cricketMeaning": "Words from the slip cordon designed to get in your head — a test of what you'll let control you.", "upright": "Something is baiting your ego — a rivalry, a grudge, a bad habit dressed up as competitive fire. Notice what's pulling your focus off the game.", "reversed": "Breaking free from a temptation or toxic pattern that's had a grip on you. You're learning to let the sledging go unanswered."}, {"id": 16, "name": "The Collapse", "traditional": "The Tower", "keywords": ["sudden disruption", "upheaval", "forced change"], "cricketMeaning": "Five wickets in five overs — the innings falling apart faster than anyone expected.", "upright": "A sudden, disruptive event is dismantling something that looked stable. It's disorienting, but it's clearing out what wasn't built to last anyway.", "reversed": "Fearing a collapse that hasn't happened yet, or narrowly avoiding one. Don't let anxiety about falling apart cost you the innings that's still in front of you."}, {"id": 17, "name": "The Comeback", "traditional": "The Star", "keywords": ["hope", "renewal", "healing", "quiet faith"], "cricketMeaning": "Returning to the field after injury or a lean patch, quietly rebuilding form and belief.", "upright": "Hope is well placed here. After a difficult stretch, healing and form are genuinely returning — trust the quiet signs of recovery.", "reversed": "Losing faith just before the turnaround, or rushing the comeback before you're truly ready. Give the recovery the time it needs."}, {"id": 18, "name": "The Floodlights", "traditional": "The Moon", "keywords": ["uncertainty", "illusion", "dew factor", "unclear conditions"], "cricketMeaning": "A day-night match under lights and dew — the ball behaving strangely, nothing quite as it seems.", "upright": "Things aren't fully clear right now, and that's okay. Move carefully through the uncertainty rather than assuming you can read conditions you can't yet see.", "reversed": "Confusion lifting, or anxiety about the unknown that's bigger than the situation warrants. The dew will settle — don't panic-bowl at shadows."}, {"id": 19, "name": "The Century", "traditional": "The Sun", "keywords": ["success", "joy", "vindication", "clarity"], "cricketMeaning": "Bat raised to the crowd, three figures on the board — pure, uncomplicated triumph.", "upright": "Genuine success and joy are here, earned and deserved. Let yourself enjoy this moment fully — no caveats needed.", "reversed": "Success that feels hollow, or joy you're not allowing yourself to feel. Don't undersell a century just because it wasn't a double."}, {"id": 20, "name": "The Review", "traditional": "Judgement", "keywords": ["reckoning", "second chances", "calling back"], "cricketMeaning": "Bat tucked under the arm, waiting on the big screen — a decision from the past being revisited and made right.", "upright": "A past decision is being reconsidered, and you may get the reprieve you've been hoping for. Trust the review process and be honest about what really happened.", "reversed": "Refusing to review your own mistakes, or burning a review on false hope. Be honest with yourself before you ask for a second look."}, {"id": 21, "name": "The World Cup", "traditional": "The World", "keywords": ["completion", "achievement", "wholeness", "arrival"], "cricketMeaning": "The trophy lifted, the long tournament finally complete — everything you worked for, whole and realized.", "upright": "A long cycle is reaching genuine completion. Whatever you've been building toward has arrived — take it in before starting the next campaign.", "reversed": "Something close to completion but not quite there — a final short of the boundary. Don't stop chasing just before the finish line."}]};
+// The full 78-card deck is loaded from cricket_tarot_deck.json at startup.
+let DECK = { cards: [] };
+async function loadDeck(){
+  try {
+    const r = await fetch('cricket_tarot_deck.json', { cache: 'no-cache' });
+    if (r.ok) DECK = await r.json();
+  } catch (e) {
+    console.error('Deck failed to load:', e);
+  }
+  return DECK;
+}
 
 const GREETING = "Alright, pads on. Tell me what's on your mind — or just say 'deal me one' and I'll pull a card and we'll see what the pitch has in store.";
-const MAX_TOTAL_CARDS = 9;
+const MAX_TOTAL_CARDS = 14;
 const SHUFFLE_MS = 1200;
+
+// --- Ground effects: everything synthesised, no audio files ---
+const Sound = (() => {
+  let ctx, master;
+  let enabled = true;
+  try { enabled = localStorage.getItem('ct_sound') !== 'off'; } catch (e) {}
+
+  function ensure(){
+    if (!ctx){
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      ctx = new AC();
+      master = ctx.createGain();
+      master.gain.value = 0.35;
+      master.connect(ctx.destination);
+    }
+    if (ctx.state === 'suspended') ctx.resume();
+  }
+
+  function noiseBuffer(dur){
+    const n = Math.max(1, Math.floor(ctx.sampleRate * dur));
+    const buf = ctx.createBuffer(1, n, ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+    return buf;
+  }
+
+  function shuffle(){
+    if (!enabled) return; ensure(); if (!ctx) return;
+    const t0 = ctx.currentTime;
+    for (let i = 0; i < 7; i++){
+      const t = t0 + i * 0.085 + Math.random() * 0.03;
+      const src = ctx.createBufferSource(); src.buffer = noiseBuffer(0.05);
+      const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 2600;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(0.5, t + 0.005);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
+      src.connect(hp).connect(g).connect(master);
+      src.start(t); src.stop(t + 0.06);
+    }
+  }
+
+  function batCrack(){
+    if (!enabled) return; ensure(); if (!ctx) return;
+    const t = ctx.currentTime;
+    const src = ctx.createBufferSource(); src.buffer = noiseBuffer(0.18);
+    const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1900; bp.Q.value = 0.9;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(1, t + 0.004);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.18);
+    src.connect(bp).connect(g).connect(master);
+    src.start(t); src.stop(t + 0.2);
+    const o = ctx.createOscillator(); o.type = 'triangle';
+    o.frequency.setValueAtTime(190, t); o.frequency.exponentialRampToValueAtTime(90, t + 0.12);
+    const og = ctx.createGain();
+    og.gain.setValueAtTime(0.6, t); og.gain.exponentialRampToValueAtTime(0.0001, t + 0.13);
+    o.connect(og).connect(master); o.start(t); o.stop(t + 0.14);
+  }
+
+  function crowdSwell(){
+    if (!enabled) return; ensure(); if (!ctx) return;
+    const t = ctx.currentTime;
+    const src = ctx.createBufferSource(); src.buffer = noiseBuffer(1.6);
+    const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 700; bp.Q.value = 0.5;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.14, t + 0.4);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 1.5);
+    src.connect(bp).connect(g).connect(master);
+    src.start(t); src.stop(t + 1.6);
+  }
+
+  function blip(){
+    if (!enabled) return; ensure(); if (!ctx) return;
+    const t = ctx.currentTime;
+    const o = ctx.createOscillator(); o.type = 'sine';
+    o.frequency.setValueAtTime(2400, t); o.frequency.exponentialRampToValueAtTime(1150, t + 0.15);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.4, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.4);
+    o.connect(g).connect(master); o.start(t); o.stop(t + 0.42);
+  }
+
+  function setEnabled(v){
+    enabled = v;
+    try { localStorage.setItem('ct_sound', v ? 'on' : 'off'); } catch (e) {}
+  }
+
+  return { ensure, shuffle, batCrack, crowdSwell, blip, setEnabled, isEnabled: () => enabled };
+})();
 
 let history = [];
 let totalCardsDrawn = 0;
@@ -312,6 +462,7 @@ const chatLog = document.getElementById('chatLog');
 const msgInput = document.getElementById('msgInput');
 const sendBtn = document.getElementById('sendBtn');
 const resetBtn = document.getElementById('resetBtn');
+const soundBtn = document.getElementById('soundBtn');
 
 function escapeHtml(str){
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -414,9 +565,15 @@ async function handleToolCall(toolCall){
   let args = {};
   try { args = JSON.parse(toolCall.function.arguments || '{}'); } catch (e) {}
 
-  const count = Math.max(1, Math.min(5, parseInt(args.count, 10) || 1));
+  if (!DECK.cards || DECK.cards.length === 0) await loadDeck();
+
+  const count = Math.max(1, Math.min(10, parseInt(args.count, 10) || 1));
   const positions = Array.isArray(args.positions) ? args.positions.slice(0, count) : [];
   while (positions.length < count) positions.push(`Card ${positions.length + 1}`);
+
+  const reason = typeof args.reason === 'string' ? args.reason.trim() : '';
+  let spread = typeof args.spread === 'string' ? args.spread.trim() : '';
+  if (/^single$/i.test(spread)) spread = '';
 
   if (totalCardsDrawn + count > MAX_TOTAL_CARDS){
     history.push({
@@ -431,8 +588,12 @@ async function handleToolCall(toolCall){
 
   const widget = document.createElement('div');
   widget.className = 'bubble reader draw-widget';
-  widget.innerHTML = `<div class="prompt">Shuffling the deck…</div><div class="draw-grid"></div><div class="drawn-row"></div>`;
+  widget.innerHTML =
+    (spread ? `<div class="spread-badge">${escapeHtml(spread)} spread</div>` : '') +
+    (reason ? `<div class="reason">${escapeHtml(reason)}</div>` : '') +
+    `<div class="prompt">Shuffling the deck…</div><div class="draw-grid"></div><div class="drawn-row"></div>`;
   chatLog.appendChild(widget);
+  Sound.shuffle();
   scrollToBottom();
 
   const grid = widget.querySelector('.draw-grid');
@@ -456,6 +617,7 @@ async function handleToolCall(toolCall){
   setTimeout(() => {
     Array.from(grid.children).forEach(c => c.classList.remove('shuffle'));
     promptEl.textContent = count === 1 ? 'Pick a card…' : `Pick ${count} cards…`;
+    Sound.shuffle();
   }, SHUFFLE_MS);
   scrollToBottom();
 
@@ -468,11 +630,16 @@ async function handleToolCall(toolCall){
 
         const idx = parseInt(cardEl.dataset.idx, 10);
         cardEl.classList.add('picked');
+        Sound.batCrack();
 
         const card = DECK.cards[idx];
         const orientation = Math.random() < 0.75 ? 'upright' : 'reversed';
         const position = positions[picked.length];
         picked.push({ position, card, orientation });
+
+        const kindLabel = !card.suit
+          ? 'Major Arcana'
+          : (String(card.rank || '').startsWith('The') ? `${card.suit} · Court` : card.suit);
 
         const t = document.createElement('div');
         t.className = 'tcard';
@@ -481,6 +648,7 @@ async function handleToolCall(toolCall){
           <div class="name">${card.name}</div>
           <div class="orient">${orientation === 'upright' ? 'Upright' : 'Reversed'}</div>
           <div class="trad">(${card.traditional})</div>
+          <div class="kind">${kindLabel}</div>
         `;
         drawnRow.appendChild(t);
         scrollToBottom();
@@ -488,6 +656,7 @@ async function handleToolCall(toolCall){
         if (picked.length === count){
           Array.from(grid.children).forEach(c => c.classList.add('disabled'));
           promptEl.textContent = 'Drawn.';
+          Sound.crowdSwell();
           resolve(picked);
         } else {
           promptEl.textContent = `Pick ${count - picked.length} more…`;
@@ -502,6 +671,10 @@ async function handleToolCall(toolCall){
     position,
     name: card.name,
     traditional: card.traditional,
+    suit: card.suit || 'Major Arcana',
+    kind: !card.suit
+      ? 'Major Arcana'
+      : (String(card.rank || '').startsWith('The') ? 'Court card' : 'Pip card'),
     orientation,
     cricketMeaning: card.cricketMeaning,
     upright: card.upright,
@@ -543,6 +716,12 @@ function resetAll(){
   addBubble('reader', GREETING);
 }
 
+function syncSoundBtn(){
+  const on = Sound.isEnabled();
+  soundBtn.textContent = on ? '🔊' : '🔇';
+  soundBtn.classList.toggle('off', !on);
+}
+
 sendBtn.addEventListener('click', sendMessage);
 msgInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !e.shiftKey){
@@ -552,8 +731,16 @@ msgInput.addEventListener('keydown', (e) => {
 });
 msgInput.addEventListener('input', autosize);
 resetBtn.addEventListener('click', resetAll);
+soundBtn.addEventListener('click', () => {
+  Sound.ensure();
+  Sound.setEnabled(!Sound.isEnabled());
+  syncSoundBtn();
+  if (Sound.isEnabled()) Sound.blip();
+});
 
+syncSoundBtn();
 resetAll();
+loadDeck();
 </script>
 
 </body>
