@@ -2,8 +2,11 @@
   "name": "cricket-tarot",
   "version": "1.0.0",
   "private": true,
-  "description": "Cricket Tarot Reader - a sample AI agent that reads cricket-themed tarot cards, backed by OpenRouter.",
+  "description": "Cricket Tarot Reader - a conversational AI reader backed by Groq.",
   "engines": {
     "node": ">=18"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7"
   }
 }
