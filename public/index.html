@@ -186,9 +186,18 @@ body.reading-active #readingStage{margin-top:0}
 </div>
 
 <script>
-const DECK = {"deck_name": "Cricket Tarot", "description": "A 22-card Major Arcana deck reimagined through the lens of cricket — its rituals, roles, and turning points.", "cards": [{"id": 0, "name": "The Debutant", "traditional": "The Fool", "keywords": ["new beginnings", "nerves", "potential", "leap of faith"], "cricketMeaning": "Walking out to bat or bowl for the very first time, cap on, heart pounding, everything still to prove.", "upright": "A fresh start is here. Trust your instincts even though you haven't 'earned' the moment yet — everyone starts with a first over, a first innings. Take the guard and back yourself.", "reversed": "Recklessness or hesitation at the crease. You're either charging in without a plan or too scared to leave the changing room. Find the middle ground before you play the shot."}, {"id": 1, "name": "The Allrounder", "traditional": "The Magician", "keywords": ["resourcefulness", "versatility", "mastery of tools"], "cricketMeaning": "The player who can bat, bowl, and field with equal skill — turning whatever is at hand into a match-winning performance.", "upright": "You have everything you need already. Skills, timing, and opportunity are aligning — it's time to contribute with bat and ball, not wait to be picked for one role.", "reversed": "Spreading yourself too thin, or talent without application. A gifted player who never quite delivers. Focus on one skill and sharpen it."}, {"id": 2, "name": "The Wicketkeeper", "traditional": "The High Priestess", "keywords": ["intuition", "quiet awareness", "reading the game"], "cricketMeaning": "Standing behind the stumps, saying little, seeing everything — the game's quiet intelligence.", "upright": "Listen more than you speak. The answer you need isn't in noise or analysis — it's in the quiet read you already have on the situation. Trust the instinct behind the stumps.", "reversed": "Ignoring your gut, or overthinking a simple appeal. You're second-guessing what you already know. Go back to instinct."}, {"id": 3, "name": "The Home Ground", "traditional": "The Empress", "keywords": ["abundance", "comfort", "nurturing conditions", "growth"], "cricketMeaning": "A flat pitch, a friendly crowd, familiar conditions — everything set up for you to flourish.", "upright": "Conditions favor you right now. Let yourself be supported, grow into the innings, and don't rush what's naturally building in your favor.", "reversed": "Home comfort turning into complacency, or a supportive environment being taken for granted. Don't let easy conditions make you lazy."}, {"id": 4, "name": "The Captain", "traditional": "The Emperor", "keywords": ["leadership", "structure", "authority", "responsibility"], "cricketMeaning": "The one setting the field, making the calls, carrying the weight of every decision.", "upright": "Step up and take control. A situation needs your structure and decisiveness — set the field, make the call, own the outcome.", "reversed": "Over-control or rigid captaincy that stifles the team. You're micromanaging the field instead of trusting your bowlers. Loosen the grip."}, {"id": 5, "name": "The Coach", "traditional": "The Hierophant", "keywords": ["tradition", "mentorship", "learning the fundamentals"], "cricketMeaning": "The voice in the nets reminding you of technique, discipline, and the basics that never go out of style.", "upright": "Go back to fundamentals. A mentor, a coaching manual, or plain old discipline has the answer you're looking for. Respect the process.", "reversed": "Blindly following outdated advice, or rejecting all guidance out of stubbornness. Question the method, but don't throw out the technique entirely."}, {"id": 6, "name": "The Partnership", "traditional": "The Lovers", "keywords": ["connection", "choice", "trust between two"], "cricketMeaning": "Two batsmen at the crease, running on trust, building something neither could alone.", "upright": "A relationship or collaboration is at a turning point — commit to it fully. Communicate clearly, run the singles, trust your partner.", "reversed": "A breakdown in communication — a mix-up, a run-out waiting to happen. Miscommunication is the real danger here, not the opposition."}, {"id": 7, "name": "The Chase", "traditional": "The Chariot", "keywords": ["determination", "momentum", "willpower", "victory through focus"], "cricketMeaning": "Batting under lights, required run rate climbing, nothing but forward momentum and nerve.", "upright": "Full steam ahead. You have the drive to pull this off — stay focused on the target and don't let doubt slow your running between the wickets.", "reversed": "Losing control of the chase — panicking, changing plans mid-over, or trying to do too much too fast. Reset and rebuild the required rate calmly."}, {"id": 8, "name": "The Anchor", "traditional": "Strength", "keywords": ["quiet resolve", "patience", "inner control"], "cricketMeaning": "The batsman who holds one end steady through a collapse, absorbing pressure without flinching.", "upright": "Real strength here is calm, not aggression. Hold your position, absorb the pressure, and let the storm around you pass without losing your composure.", "reversed": "Forcing control through stubbornness, or crumbling under pressure you tried to just 'tough out.' Strength without patience becomes brittle."}, {"id": 9, "name": "The Twelfth Man", "traditional": "The Hermit", "keywords": ["reflection", "solitude", "waiting your turn"], "cricketMeaning": "Watching from the boundary, drinks tray in hand, learning the game from the outside looking in.", "upright": "Step back and observe before acting. This is a season for quiet reflection, not center stage — your moment will come, use this time to prepare.", "reversed": "Isolating yourself when you should be engaging, or feeling permanently overlooked. Don't mistake being benched for being forgotten."}, {"id": 10, "name": "The Toss", "traditional": "Wheel of Fortune", "keywords": ["luck", "turning point", "cycles", "chance"], "cricketMeaning": "The coin spinning in the air before a ball is bowled — fortune's first, unearned decision of the day.", "upright": "Circumstances beyond your control are about to shift. A change of luck is coming — win or lose the toss, what matters is how you play the conditions you're given.", "reversed": "A run of bad luck, or blaming fortune for outcomes you could still influence. The toss is only the start of the story, not the whole match."}, {"id": 11, "name": "The Umpire", "traditional": "Justice", "keywords": ["fairness", "accountability", "clear decisions"], "cricketMeaning": "The final word on every appeal — impartial, deliberate, bound by the laws of the game.", "upright": "A fair and honest decision is needed, from you or about you. Trust the process, accept the outcome, and act with integrity even when it costs you.", "reversed": "An unfair call, or refusing to accept a decision that's already been made. Dwelling on a bad decision only costs you the next ball."}, {"id": 12, "name": "The Rain Delay", "traditional": "The Hanged Man", "keywords": ["pause", "surrender", "new perspective"], "cricketMeaning": "Covers on, players off, the match suspended in limbo — nothing to do but wait and see it differently.", "upright": "Progress is paused for a reason. Use this stoppage to see the situation from a new angle rather than fighting the delay. Sometimes waiting is the move.", "reversed": "Resisting a necessary pause, or staying stuck in limbo long after play could resume. Don't let the delay become an excuse to stall."}, {"id": 13, "name": "The Run Out", "traditional": "Death", "keywords": ["sudden ending", "transformation", "letting go"], "cricketMeaning": "Gone in an instant, no warning, no half-measures — one end of something, the start of another.", "upright": "An abrupt ending is clearing space for what's next. Don't fight the finish — a chapter is closing so a new innings can begin.", "reversed": "Refusing to accept something is over, dragging out an ending that's already happened. Walk off before you're given out."}, {"id": 14, "name": "The Declaration", "traditional": "Temperance", "keywords": ["balance", "timing", "moderation"], "cricketMeaning": "The captain choosing exactly the right moment to stop batting — not too early, not too greedy.", "upright": "Balance and good timing matter more than pushing for more. You have enough — declare, and set up the next phase from a position of strength.", "reversed": "Bad timing — declaring too early out of impatience, or batting on too long out of greed. Reassess what 'enough' actually looks like."}, {"id": 15, "name": "The Sledge", "traditional": "The Devil", "keywords": ["temptation", "ego", "bad habits", "provocation"], "cricketMeaning": "Words from the slip cordon designed to get in your head — a test of what you'll let control you.", "upright": "Something is baiting your ego — a rivalry, a grudge, a bad habit dressed up as competitive fire. Notice what's pulling your focus off the game.", "reversed": "Breaking free from a temptation or toxic pattern that's had a grip on you. You're learning to let the sledging go unanswered."}, {"id": 16, "name": "The Collapse", "traditional": "The Tower", "keywords": ["sudden disruption", "upheaval", "forced change"], "cricketMeaning": "Five wickets in five overs — the innings falling apart faster than anyone expected.", "upright": "A sudden, disruptive event is dismantling something that looked stable. It's disorienting, but it's clearing out what wasn't built to last anyway.", "reversed": "Fearing a collapse that hasn't happened yet, or narrowly avoiding one. Don't let anxiety about falling apart cost you the innings that's still in front of you."}, {"id": 17, "name": "The Comeback", "traditional": "The Star", "keywords": ["hope", "renewal", "healing", "quiet faith"], "cricketMeaning": "Returning to the field after injury or a lean patch, quietly rebuilding form and belief.", "upright": "Hope is well placed here. After a difficult stretch, healing and form are genuinely returning — trust the quiet signs of recovery.", "reversed": "Losing faith just before the turnaround, or rushing the comeback before you're truly ready. Give the recovery the time it needs."}, {"id": 18, "name": "The Floodlights", "traditional": "The Moon", "keywords": ["uncertainty", "illusion", "dew factor", "unclear conditions"], "cricketMeaning": "A day-night match under lights and dew — the ball behaving strangely, nothing quite as it seems.", "upright": "Things aren't fully clear right now, and that's okay. Move carefully through the uncertainty rather than assuming you can read conditions you can't yet see.", "reversed": "Confusion lifting, or anxiety about the unknown that's bigger than the situation warrants. The dew will settle — don't panic-bowl at shadows."}, {"id": 19, "name": "The Century", "traditional": "The Sun", "keywords": ["success", "joy", "vindication", "clarity"], "cricketMeaning": "Bat raised to the crowd, three figures on the board — pure, uncomplicated triumph.", "upright": "Genuine success and joy are here, earned and deserved. Let yourself enjoy this moment fully — no caveats needed.", "reversed": "Success that feels hollow, or joy you're not allowing yourself to feel. Don't undersell a century just because it wasn't a double."}, {"id": 20, "name": "The Review", "traditional": "Judgement", "keywords": ["reckoning", "second chances", "calling back"], "cricketMeaning": "Bat tucked under the arm, waiting on the big screen — a decision from the past being revisited and made right.", "upright": "A past decision is being reconsidered, and you may get the reprieve you've been hoping for. Trust the review process and be honest about what really happened.", "reversed": "Refusing to review your own mistakes, or burning a review on false hope. Be honest with yourself before you ask for a second look."}, {"id": 21, "name": "The World Cup", "traditional": "The World", "keywords": ["completion", "achievement", "wholeness", "arrival"], "cricketMeaning": "The trophy lifted, the long tournament finally complete — everything you worked for, whole and realized.", "upright": "A long cycle is reaching genuine completion. Whatever you've been building toward has arrived — take it in before starting the next campaign.", "reversed": "Something close to completion but not quite there — a final short of the boundary. Don't stop chasing just before the finish line."}]};
+// The full 78-card deck (22 Major Arcana + 56 Minor Arcana) is loaded from
+// cricket_tarot_deck.json at startup, same as prod.
+let DECK = { cards: [] };
+async function loadDeck(){
+  try{
+    const r = await fetch('cricket_tarot_deck.json', { cache: 'no-cache' });
+    if (r.ok) DECK = await r.json();
+  }catch(e){ console.error('Deck failed to load:', e); }
+  return DECK;
+}
 
-const MAX_TOTAL_CARDS = 9;
+const MAX_TOTAL_CARDS = 14;
 
 // Ground effects: everything synthesised, no audio files.
 const Sound = (() => {
@@ -283,6 +292,7 @@ const Sound = (() => {
 
 let history = [];
 let totalCardsDrawn = 0;
+let drawnCardIds = new Set();
 let busy = false;
 
 const questionStage = document.getElementById('questionStage');
@@ -343,7 +353,7 @@ function addTypingBubble(){
   return el;
 }
 function resetUI(){
-  history=[]; totalCardsDrawn=0; busy=false;
+  history=[]; totalCardsDrawn=0; drawnCardIds=new Set(); busy=false;
   chatLog.innerHTML=''; tableDeck.innerHTML='<div class="table-panel-empty" id="tablePanelEmpty">Cards drawn during the reading will be laid out here.</div>';
   readingStage.classList.remove('visible'); document.body.classList.remove('reading-active');
   questionStage.style.display='block'; msgInput.value=''; followupInput.value=''; autosize(msgInput); autosize(followupInput); setBusy(false); showStatus('Ready for the toss');
@@ -377,20 +387,28 @@ async function callAgent(){
 }
 async function handleToolCall(toolCall){
   let args={}; try{args=JSON.parse(toolCall.function.arguments||'{}')}catch(e){}
-  const count=Math.max(1,Math.min(5,parseInt(args.count,10)||1));
-  const positions=Array.isArray(args.positions)?args.positions.slice(0,count):[];
-  while(positions.length<count) positions.push(`Card ${positions.length+1}`);
-  if(totalCardsDrawn+count>MAX_TOTAL_CARDS){
+  if(!DECK.cards || DECK.cards.length===0) await loadDeck();
+  const requestedCount=Math.max(1,Math.min(5,parseInt(args.count,10)||1));
+  if(totalCardsDrawn+requestedCount>MAX_TOTAL_CARDS){
     history.push({role:'tool',tool_call_id:toolCall.id,name:'draw_cards',content:JSON.stringify({error:`That's plenty of cards for one sitting (${totalCardsDrawn} drawn already). Wrap up the reading with what's already on the table instead of drawing more.`})});
     await callAgent(); return;
   }
+  // Cards already laid on the table this reading stay out of the deck --
+  // same as a real shuffle-and-deal, nothing comes up twice until a fresh reading.
+  const available=DECK.cards.filter(c=>!drawnCardIds.has(c.id));
+  if(!available.length){
+    history.push({role:'tool',tool_call_id:toolCall.id,name:'draw_cards',content:JSON.stringify({error:"Every card in the deck has already come up this reading -- there's nothing left to turn over. Wrap up with what's on the table, or start a New Reading to reshuffle the full deck."})});
+    await callAgent(); return;
+  }
+  const count=Math.min(requestedCount,available.length);
+  const positions=Array.isArray(args.positions)?args.positions.slice(0,count):[];
+  while(positions.length<count) positions.push(`Card ${positions.length+1}`);
   const widget=document.createElement('div'); widget.className='bubble reader draw-widget';
   widget.innerHTML=`<div class="prompt">${count===1?'Pick a card…':`Pick ${count} cards…`}</div><div class="draw-grid"></div>`;
   chatLog.appendChild(widget); scrollChatToBottom();
   Sound.shuffle();
   const grid=widget.querySelector('.draw-grid');
-  const cards=DECK.cards;
-  cards.forEach((card,i)=>{
+  available.forEach((card,i)=>{
     const el=document.createElement('button'); el.type='button'; el.className='pitch-card'; el.dataset.idx=i; el.setAttribute('aria-label',`Card ${i+1}`);
     const tilt=((i%9)-4)*2.6; el.style.setProperty('--tilt',tilt+'deg'); el.style.zIndex=i;
     grid.appendChild(el);
@@ -404,9 +422,10 @@ async function handleToolCall(toolCall){
     Array.from(grid.children).forEach(cardEl=>{
       cardEl.addEventListener('click',()=>{
         if(cardEl.classList.contains('picked')||picked.length>=count) return;
-        const idx=parseInt(cardEl.dataset.idx,10); const card=cards[idx];
+        const idx=parseInt(cardEl.dataset.idx,10); const card=available[idx];
         cardEl.classList.add('picked');
         Sound.batCrack();
+        drawnCardIds.add(card.id);
         const orientation=Math.random()<.75?'upright':'reversed'; const position=positions[picked.length];
         picked.push({position,card,orientation});
         document.getElementById('tablePanelEmpty')?.remove();
@@ -425,7 +444,7 @@ async function handleToolCall(toolCall){
     });
   });
   setBusy(true);
-  const cardsPayload=drawnCards.map(({position,card,orientation})=>({position,name:card.name,traditional:card.traditional,orientation,cricketMeaning:card.cricketMeaning,upright:card.upright,reversed:card.reversed}));
+  const cardsPayload=drawnCards.map(({position,card,orientation})=>({position,name:card.name,traditional:card.traditional,suit:card.suit||'Major Arcana',kind:!card.suit?'Major Arcana':(String(card.rank||'').startsWith('The')?'Court card':'Pip card'),orientation,cricketMeaning:card.cricketMeaning,upright:card.upright,reversed:card.reversed}));
   history.push({role:'tool',tool_call_id:toolCall.id,name:'draw_cards',content:JSON.stringify({cards:cardsPayload})});
   await callAgent();
 }
@@ -451,6 +470,7 @@ document.getElementById('newReadingTop').addEventListener('click',resetUI);newRe
 soundBtn.addEventListener('click',()=>{ Sound.ensure(); Sound.setEnabled(!Sound.isEnabled()); syncSoundBtn(); if(Sound.isEnabled()) Sound.blip(); });
 syncSoundBtn();
 resetUI();
+loadDeck();
 </script>
 </body>
 </html>
