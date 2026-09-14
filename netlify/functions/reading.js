@@ -4,7 +4,7 @@
 // function prepends the system prompt and calls Groq with the draw_cards tool.
 // Requires GROQ_API_KEY to be set in Netlify, or in a local .env file for local development.
 
-// Load .env for local development. Netlify already provides environment variables,
+// Netlify already provides environment variables,
 // so this does not replace or override a Netlify-provided GROQ_API_KEY.
 try {
   require("dotenv").config({ path: require("path").resolve(__dirname, "../../.env") });
