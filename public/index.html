@@ -72,9 +72,10 @@ button{cursor:pointer}
 .pitch:after{content:"";position:absolute;left:50%;top:50%;width:370px;height:210px;border:1px solid rgba(236,215,165,.18);border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}
 .wicket{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:52px;height:105px;opacity:.16;z-index:1}.wicket span{position:absolute;bottom:0;width:4px;height:72px;background:#f1d79a}.wicket span:nth-child(1){left:5px}.wicket span:nth-child(2){left:24px}.wicket span:nth-child(3){right:5px}.wicket i{position:absolute;bottom:70px;width:23px;height:3px;background:#f1d79a}.wicket i:nth-of-type(1){left:0}.wicket i:nth-of-type(2){right:0}
 .pitch-instruction{text-align:center;position:relative;z-index:3;color:#f1dfb1;font-family:Georgia,serif;font-style:italic;margin-bottom:25px}
-.deck-spread{position:relative;z-index:4;display:grid;grid-template-columns:repeat(11,minmax(42px,1fr));gap:10px;max-width:960px;margin:0 auto}
-.pitch-card{aspect-ratio:2/3;border:1px solid rgba(246,221,160,.82);border-radius:7px;background:radial-gradient(circle,rgba(231,190,91,.18),transparent 45%),linear-gradient(150deg,#174a36,#0a2b20);box-shadow:0 9px 16px rgba(0,0,0,.22),inset 0 0 0 2px rgba(232,204,131,.08);position:relative;display:grid;place-items:center;color:#e8cb84;transition:.2s ease;user-select:none}
-.pitch-card:before{content:"✦";width:25px;height:25px;border:1px solid rgba(235,205,132,.55);border-radius:50%;display:grid;place-items:center;font-size:.7rem}.pitch-card:hover{transform:translateY(-7px) rotate(-1deg);box-shadow:0 17px 25px rgba(0,0,0,.28),0 0 18px rgba(231,189,99,.15)}.pitch-card.picked{opacity:.13;transform:scale(.9);pointer-events:none}.pitch-card.disabled{pointer-events:none}
+.deck-spread{position:relative;z-index:4;display:flex;align-items:flex-end;width:100%;overflow:hidden;max-width:960px;margin:0 auto;padding:26px 4px 8px}
+.pitch-card{flex:0 0 auto;width:64px;aspect-ratio:2/3;margin-left:-38px;border:1px solid rgba(246,221,160,.82);border-radius:7px;background:radial-gradient(circle,rgba(231,190,91,.18),transparent 45%),linear-gradient(150deg,#174a36,#0a2b20);box-shadow:0 9px 16px rgba(0,0,0,.22),inset 0 0 0 2px rgba(232,204,131,.08);position:relative;display:grid;place-items:center;color:#e8cb84;user-select:none;transform-origin:50% 100%;transform:rotate(var(--tilt,0deg));transition:transform .15s ease,box-shadow .15s ease,margin .15s ease,z-index 0s}
+.pitch-card:first-child{margin-left:0}
+.pitch-card:before{content:"✦";width:25px;height:25px;border:1px solid rgba(235,205,132,.55);border-radius:50%;display:grid;place-items:center;font-size:.7rem}.pitch-card:hover{transform:translateY(-20px) rotate(0deg);z-index:200 !important;box-shadow:0 17px 25px rgba(0,0,0,.28),0 0 18px rgba(231,189,99,.15)}.pitch-card.picked{opacity:.13;pointer-events:none}.pitch-card.picked:hover{transform:rotate(var(--tilt,0deg));z-index:auto !important}.pitch-card.disabled{pointer-events:none}
 .selected-area{max-width:1120px;margin:28px auto 0;min-height:70px;display:flex;justify-content:center;gap:14px;flex-wrap:wrap;position:relative;z-index:5}.selected-slot{width:110px;min-height:44px;border:1px dashed rgba(233,204,131,.38);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#a9b8af;font-size:.62rem;letter-spacing:.13em;text-transform:uppercase}.selected-card{width:112px;aspect-ratio:2/3;border:1px solid #e4c46f;border-radius:9px;background:linear-gradient(160deg,#fff9eb,#eadbbd);color:#18231d;box-shadow:0 15px 28px rgba(0,0,0,.25);padding:10px;text-align:center;animation:flip .55s cubic-bezier(.2,.8,.2,1)}
 .selected-card .position{font-size:.55rem;color:#8f3f36;letter-spacing:.12em;text-transform:uppercase;font-weight:800}.selected-card .mini-name{font-family:Georgia,serif;font-size:.86rem;font-weight:bold;margin:17px 0 7px}.selected-card .mini-orient{font-size:.62rem;font-style:italic;color:#716c60}
 @keyframes flip{from{opacity:0;transform:perspective(600px) rotateY(90deg) translateY(12px)}to{opacity:1;transform:none}}
@@ -89,8 +90,8 @@ body.reading-active .topbar,
 body.reading-active .hero,
 body.reading-active footer{display:none}
 body.reading-active #readingStage{margin-top:0}
-@media(max-width:800px){.choices{grid-template-columns:repeat(2,1fr)}.deck-spread{grid-template-columns:repeat(8,minmax(38px,1fr));gap:8px}.pitch{padding:28px 18px 32px}.hero{min-height:300px}.hero h1{font-size:clamp(3rem,13vw,5rem)}}
-@media(max-width:520px){.topbar{height:64px}.brand-name{font-size:.92rem}.toplink{font-size:.58rem}.hero{min-height:220px;padding:28px 18px 32px}.hero-inner{display:block;text-align:center}.hero-logo{width:58px;height:58px;margin:0 auto 9px}.hero h1{font-size:clamp(2.6rem,13vw,4rem)}.hero .subtitle{grid-column:2;letter-spacing:.25em}.section{padding:45px 15px}.choices{grid-template-columns:1fr 1fr;gap:8px}.choice{min-height:155px;padding:19px 10px}.choice h3{font-size:.76rem}.choice p{font-size:.73rem}.question-box{display:block}.question-box textarea{width:100%}.primary{width:100%;margin-top:5px}.deck-spread{grid-template-columns:repeat(6,minmax(38px,1fr));gap:7px}.pitch{min-height:520px}.pitch:after{width:240px}.pitch-card{border-radius:6px}.pitch-header{display:block}.pitch-count{display:block;margin-top:8px}.selected-card{width:92px}.composer-inner{display:grid;grid-template-columns:1fr 52px}}
+@media(max-width:800px){.choices{grid-template-columns:repeat(2,1fr)}.pitch{padding:28px 18px 32px}.hero{min-height:300px}.hero h1{font-size:clamp(3rem,13vw,5rem)}}
+@media(max-width:520px){.topbar{height:64px}.brand-name{font-size:.92rem}.toplink{font-size:.58rem}.hero{min-height:220px;padding:28px 18px 32px}.hero-inner{display:block;text-align:center}.hero-logo{width:58px;height:58px;margin:0 auto 9px}.hero h1{font-size:clamp(2.6rem,13vw,4rem)}.hero .subtitle{grid-column:2;letter-spacing:.25em}.section{padding:45px 15px}.choices{grid-template-columns:1fr 1fr;gap:8px}.choice{min-height:155px;padding:19px 10px}.choice h3{font-size:.76rem}.choice p{font-size:.73rem}.question-box{display:block}.question-box textarea{width:100%}.primary{width:100%;margin-top:5px}.pitch-card{width:46px;margin-left:-27px}.pitch{min-height:520px}.pitch:after{width:240px}.pitch-card{border-radius:6px}.pitch-header{display:block}.pitch-count{display:block;margin-top:8px}.selected-card{width:92px}.composer-inner{display:grid;grid-template-columns:1fr 52px}}
 </style>
 </head>
 <body>
@@ -220,6 +221,19 @@ function renderMarkdown(raw){
   }).join('');
 }
 function autosize(el){el.style.height='auto';el.style.height=Math.min(130,el.scrollHeight)+'px';}
+// Compresses the card-back overlap so the whole fan fits the pitch width
+// exactly, with no horizontal scrolling, regardless of deck size.
+function fitCardFan(grid){
+  const cards=Array.from(grid.querySelectorAll('.pitch-card'));
+  const n=cards.length; if(!n) return;
+  const gridStyle=getComputedStyle(grid);
+  const containerWidth=grid.clientWidth-parseFloat(gridStyle.paddingLeft||0)-parseFloat(gridStyle.paddingRight||0);
+  const cardWidth=cards[0].offsetWidth||64;
+  let step=n>1?(containerWidth-cardWidth)/(n-1):0;
+  step=Math.max(1,Math.min(step,cardWidth));
+  cards.forEach((c,i)=>{ c.style.marginLeft=i===0?'0px':(-(cardWidth-step)).toFixed(2)+'px'; });
+}
+window.addEventListener('resize',()=>{ if(deckSpread.children.length) fitCardFan(deckSpread); });
 function setBusy(b){busy=b;sendBtn.disabled=b;followupBtn.disabled=b;msgInput.disabled=b;followupInput.disabled=b;}
 function showStatus(text){statusline.textContent=text;}
 function addMessage(label,text){
@@ -278,9 +292,11 @@ async function handleToolCall(toolCall){
   deckSpread.innerHTML=''; selectedArea.innerHTML='';
   const cards=DECK.cards;
   cards.forEach((card,i)=>{
-    const el=document.createElement('button'); el.type='button'; el.className='pitch-card'; el.dataset.idx=i; el.setAttribute('aria-label',`Card ${i+1}`); el.style.transform=`rotate(${(Math.random()*4-2).toFixed(2)}deg)`;
+    const el=document.createElement('button'); el.type='button'; el.className='pitch-card'; el.dataset.idx=i; el.setAttribute('aria-label',`Card ${i+1}`);
+    const tilt=((i%9)-4)*2.6; el.style.setProperty('--tilt',tilt+'deg'); el.style.zIndex=i;
     el.addEventListener('click',()=>pickCard(el,positions,count)); deckSpread.appendChild(el);
   });
+  fitCardFan(deckSpread);
   totalCardsDrawn+=count;
   setBusy(false); showStatus(count===1?'Choose a card on the pitch':`Choose ${count} cards on the pitch`);
   const drawnCards=await new Promise(resolve=>{currentPickResolver=resolve});
