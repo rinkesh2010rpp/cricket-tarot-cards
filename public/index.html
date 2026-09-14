@@ -161,13 +161,15 @@
     40%{ opacity:.9; }
   }
 
-  .draw-widget{
+  .bubble.reader.draw-widget{
     align-self:stretch;
     max-width:100%;
-    background:rgba(0,0,0,.18);
-    border:1px dashed rgba(217,164,65,.55);
+    background:radial-gradient(140% 100% at 50% 0%, var(--grass2) 0%, #08160f 85%);
+    color:var(--cream);
+    border:1px solid rgba(217,164,65,.5);
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.35), 0 8px 20px -10px rgba(0,0,0,.6);
     border-radius:12px;
-    padding:14px;
+    padding:16px 14px;
   }
   .draw-widget .prompt{
     text-align:center;
@@ -177,40 +179,50 @@
     font-size:.85rem;
   }
   .draw-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(40px,1fr));
-    gap:6px;
+    display:flex;
+    align-items:flex-end;
     max-width:100%;
-    margin:0 auto;
-    max-height:326px;
-    overflow-y:auto;
-    padding:2px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:34px 30px 14px 46px;
+    scrollbar-width:thin;
+    scrollbar-color:rgba(217,164,65,.5) transparent;
   }
+  .draw-grid::-webkit-scrollbar{ height:8px; }
+  .draw-grid::-webkit-scrollbar-track{ background:transparent; }
+  .draw-grid::-webkit-scrollbar-thumb{ background:rgba(217,164,65,.45); border-radius:4px; }
   .card-back{
+    flex:0 0 auto;
+    width:62px;
     aspect-ratio:2/3;
+    margin-left:-40px;
     border-radius:6px;
     background:radial-gradient(120% 100% at 50% 12%, var(--grass2) 0%, #0a2118 75%);
     border:1.5px solid rgba(217,164,65,.65);
-    box-shadow:inset 0 0 0 3px rgba(0,0,0,.25), inset 0 0 0 4px rgba(217,164,65,.18);
+    box-shadow:inset 0 0 0 3px rgba(0,0,0,.25), inset 0 0 0 4px rgba(217,164,65,.18), 0 6px 12px -6px rgba(0,0,0,.55);
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:18%;
     cursor:pointer;
     color:var(--gold);
-    transition:transform .15s ease, box-shadow .15s ease;
+    position:relative;
+    transform-origin:50% 100%;
+    transform:rotate(var(--tilt, 0deg));
+    transition:transform .15s ease, box-shadow .15s ease, margin .15s ease, z-index 0s;
     user-select:none;
   }
-  .card-back svg{ width:100%; height:100%; display:block; }
+  .card-back:first-child{ margin-left:0; }
+  .card-back svg{ width:64%; height:64%; display:block; }
   .card-back:hover{
-    transform:translateY(-3px);
-    box-shadow:inset 0 0 0 3px rgba(0,0,0,.25), inset 0 0 0 4px rgba(217,164,65,.3), 0 6px 16px -6px rgba(217,164,65,.45);
+    transform:translateY(-22px) rotate(0deg);
+    z-index:200 !important;
+    box-shadow:inset 0 0 0 3px rgba(0,0,0,.25), inset 0 0 0 4px rgba(217,164,65,.35), 0 14px 24px -10px rgba(0,0,0,.65), 0 0 0 1px rgba(217,164,65,.5);
   }
   .card-back.picked{
-    opacity:.25;
+    opacity:.22;
     cursor:default;
-    transform:none;
   }
+  .card-back.picked:hover{ transform:rotate(var(--tilt, 0deg)); z-index:auto !important; }
   .card-back.disabled{ cursor:default; }
   .card-back.shuffle{
     animation:shuffleJitter .5s ease-in-out infinite;
@@ -702,6 +714,9 @@ async function handleToolCall(toolCall){
     d.className = 'card-back shuffle';
     d.innerHTML = seamMarkSVG();
     d.dataset.idx = i;
+    const tilt = ((i % 9) - 4) * 2.6;
+    d.style.setProperty('--tilt', tilt + 'deg');
+    d.style.zIndex = i;
     ['1','2','3','4'].forEach(n => {
       d.style.setProperty(`--sx${n}`, jitter());
       d.style.setProperty(`--sy${n}`, jitter());
