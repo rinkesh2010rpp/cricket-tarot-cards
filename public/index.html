@@ -77,7 +77,7 @@
   }
 
   .chat-shell{
-    max-width:760px;
+    max-width:75%;
     margin:0 auto;
     background:rgba(0,0,0,.25);
     border:1px solid rgba(217,164,65,.4);
@@ -181,16 +181,10 @@
   .draw-grid{
     display:flex;
     align-items:flex-end;
-    max-width:100%;
-    overflow-x:auto;
-    overflow-y:hidden;
-    padding:34px 30px 14px 46px;
-    scrollbar-width:thin;
-    scrollbar-color:rgba(217,164,65,.5) transparent;
+    width:100%;
+    overflow:hidden;
+    padding:34px 6px 14px;
   }
-  .draw-grid::-webkit-scrollbar{ height:8px; }
-  .draw-grid::-webkit-scrollbar-track{ background:transparent; }
-  .draw-grid::-webkit-scrollbar-thumb{ background:rgba(217,164,65,.45); border-radius:4px; }
   .card-back{
     flex:0 0 auto;
     width:62px;
@@ -603,6 +597,33 @@ function rankBadge(card){
   return RANK_BADGE[card.rank] || card.rank;
 }
 
+// Compresses the card-back overlap so the whole fan fits the container
+// width exactly, with no horizontal scrolling, regardless of deck size.
+function fitCardFan(grid){
+  const cards = Array.from(grid.querySelectorAll('.card-back'));
+  const n = cards.length;
+  if (!n) return;
+  // clientWidth includes the grid's own left/right padding, but the flex
+  // children are laid out inside that padding, not across the full
+  // clientWidth -- subtract it out so the fan spans the real usable space
+  // (otherwise the last card or two spill past the edge and get clipped).
+  const gridStyle = getComputedStyle(grid);
+  const containerWidth = grid.clientWidth - parseFloat(gridStyle.paddingLeft || 0) - parseFloat(gridStyle.paddingRight || 0);
+  // offsetWidth reflects the laid-out box size, unaffected by the
+  // rotate()/translate() transforms on tilted or still-shuffling cards.
+  // getBoundingClientRect() would return the rotated bounding box instead,
+  // which is wider than the actual card and threw this calc off.
+  const cardWidth = cards[0].offsetWidth || 62;
+  let step = n > 1 ? (containerWidth - cardWidth) / (n - 1) : 0;
+  step = Math.max(1, Math.min(step, cardWidth));
+  cards.forEach((c, i) => {
+    c.style.marginLeft = i === 0 ? '0px' : (-(cardWidth - step)).toFixed(2) + 'px';
+  });
+}
+window.addEventListener('resize', () => {
+  document.querySelectorAll('.draw-grid').forEach(fitCardFan);
+});
+
 function scrollToBottom(){
   chatLog.scrollTop = chatLog.scrollHeight;
 }
@@ -725,6 +746,7 @@ async function handleToolCall(toolCall){
     d.style.animationDelay = (Math.random() * 0.3) + 's';
     grid.appendChild(d);
   });
+  fitCardFan(grid);
 
   setTimeout(() => {
     Array.from(grid.children).forEach(c => c.classList.remove('shuffle'));
