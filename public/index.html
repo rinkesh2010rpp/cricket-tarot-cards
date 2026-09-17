@@ -18,6 +18,13 @@ button{cursor:pointer}
 .site{min-height:100vh}
 .sound-toggle{position:fixed;top:82px;right:16px;background:rgba(0,0,0,.32);border:1px solid rgba(233,204,131,.5);color:var(--gold-light);font-size:1rem;padding:7px 10px;border-radius:8px;z-index:50}
 .sound-toggle.off{opacity:.5}
+.voice-toggle{top:128px}
+.mic-btn{border:1px solid var(--gold);background:transparent;color:#244c3b;border-radius:6px;width:52px;min-height:42px;font-size:1.05rem;flex:0 0 auto}
+.mic-btn:hover{background:rgba(200,154,69,.1)}
+.mic-btn.recording{background:var(--red);border-color:var(--red);color:#fff;animation:micpulse 1.1s infinite}
+.mic-btn:disabled{opacity:.5;cursor:not-allowed}
+.composer .mic-btn{width:52px;min-height:46px;border:1px solid rgba(233,204,131,.4);background:rgba(255,255,255,.06);color:#fff5dd;border-radius:8px}
+@keyframes micpulse{0%,100%{box-shadow:0 0 0 0 rgba(143,63,54,.55)}50%{box-shadow:0 0 0 8px rgba(143,63,54,0)}}
 .topbar{height:72px;padding:0 clamp(20px,5vw,70px);display:flex;align-items:center;justify-content:space-between;background:#061c15;color:#ead39b;border-bottom:1px solid rgba(233,204,131,.2);position:relative;z-index:10}
 .brand{display:flex;align-items:center;gap:12px;color:#f0d99e;text-decoration:none}
 .logo{width:42px;height:42px;position:relative;display:grid;place-items:center;border:1px solid rgba(233,204,131,.75);border-radius:50%;box-shadow:0 0 0 5px rgba(233,204,131,.05)}
@@ -120,6 +127,7 @@ body.reading-active footer{display:none}
 <body>
 <div class="site">
   <button id="soundBtn" class="sound-toggle" title="Sound on/off" aria-label="Toggle sound" type="button">🔊</button>
+  <button id="voiceBtn" class="sound-toggle voice-toggle" title="Spoken replies on/off" aria-label="Toggle spoken replies" type="button">🔈</button>
   <header class="topbar">
     <a class="brand" href="#top" aria-label="Cricket Tarot home">
       <span class="logo" aria-hidden="true"><span class="spark">✦</span><span class="stumps"></span><span class="ball"></span></span>
@@ -153,6 +161,7 @@ body.reading-active footer{display:none}
           <div class="question-label">Ask your specific question</div>
           <div class="question-box">
             <textarea id="msgInput" rows="2" placeholder="Ask your question here…"></textarea>
+            <button class="mic-btn" id="micBtnInitial" type="button" title="Ask by voice" aria-label="Ask by voice">🎤</button>
             <button class="primary" id="sendBtn" type="button">✦ Take it to the toss →</button>
           </div>
           <div class="statusline" id="statusline">Ready for the toss</div>
@@ -167,6 +176,7 @@ body.reading-active footer{display:none}
           <div class="chat-log" id="chatLog"></div>
           <div class="composer">
             <textarea id="followupInput" rows="1" placeholder="Ask a follow-up about this reading…"></textarea>
+            <button class="mic-btn" id="micBtnFollowup" type="button" title="Ask by voice" aria-label="Ask by voice">🎤</button>
             <button class="send" id="followupBtn" type="button" aria-label="Send follow-up">→</button>
           </div>
           <div class="composer-foot">
@@ -301,10 +311,13 @@ const questionStage = document.getElementById('questionStage');
 const readingStage = document.getElementById('readingStage');
 const chatLog = document.getElementById('chatLog');
 const soundBtn = document.getElementById('soundBtn');
+const voiceBtn = document.getElementById('voiceBtn');
 const msgInput = document.getElementById('msgInput');
 const sendBtn = document.getElementById('sendBtn');
+const micBtnInitial = document.getElementById('micBtnInitial');
 const followupInput = document.getElementById('followupInput');
 const followupBtn = document.getElementById('followupBtn');
+const micBtnFollowup = document.getElementById('micBtnFollowup');
 const statusline = document.getElementById('statusline');
 const tableDeck = document.getElementById('tableDeck');
 const newReadingBtn = document.getElementById('newReadingBtn');
@@ -338,7 +351,7 @@ function fitCardFan(grid){
   cards.forEach((c,i)=>{ c.style.marginLeft=i===0?'0px':(-(cardWidth-step)).toFixed(2)+'px'; });
 }
 window.addEventListener('resize',()=>{ document.querySelectorAll('.draw-grid').forEach(fitCardFan); });
-function setBusy(b){busy=b;sendBtn.disabled=b;followupBtn.disabled=b;msgInput.disabled=b;followupInput.disabled=b;}
+function setBusy(b){busy=b;sendBtn.disabled=b;followupBtn.disabled=b;msgInput.disabled=b;followupInput.disabled=b;micBtnInitial.disabled=b;micBtnFollowup.disabled=b;}
 function showStatus(text){statusline.textContent=text;}
 function scrollChatToBottom(){chatLog.scrollTop=chatLog.scrollHeight;}
 function addBubble(role,text){
@@ -355,6 +368,7 @@ function addTypingBubble(){
   return el;
 }
 function resetUI(){
+  stopRecording(); VoiceOut.stop();
   history=[]; totalCardsDrawn=0; drawnCardIds=new Set(); busy=false;
   chatLog.innerHTML=''; tableDeck.innerHTML='<div class="table-panel-empty" id="tablePanelEmpty">Cards drawn during the reading will be laid out here.</div>';
   readingStage.classList.remove('visible'); document.body.classList.remove('reading-active');
@@ -377,6 +391,7 @@ async function callAgent(){
     const message=data.message; history.push(message);
     if(message.content && message.content.trim()){
       addBubble('reader',message.content.trim());
+      VoiceOut.speak(message.content.trim());
     }
     const toolCalls=message.tool_calls||[];
     if(toolCalls.length>0){ await handleToolCall(toolCalls[0]); }
@@ -463,14 +478,152 @@ function syncSoundBtn(){
   soundBtn.classList.toggle('off',!on);
 }
 
+// Spoken replies: uses the browser's built-in speechSynthesis for now (no backend call, no
+// setup) -- swap this for the /.netlify/functions/speak call (Groq Orpheus TTS) once its
+// terms are accepted in the Groq console, for a less robotic voice. Off by default -- turning
+// it on is itself the user gesture that unlocks speech synthesis in some browsers.
+const VoiceOut = (() => {
+  let enabled = false;
+  try { enabled = localStorage.getItem('ct_voice') === 'on'; } catch (e) {}
+  function isEnabled(){ return enabled; }
+  function setEnabled(v){ enabled = v; try { localStorage.setItem('ct_voice', v ? 'on' : 'off'); } catch (e) {} }
+  function stop(){ if (window.speechSynthesis) window.speechSynthesis.cancel(); }
+  function speak(text){
+    if (!enabled || !text || !window.speechSynthesis) return;
+    stop();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US';
+    window.speechSynthesis.speak(utter);
+  }
+  return { isEnabled, setEnabled, stop, speak };
+})();
+function syncVoiceBtn(){
+  const on=VoiceOut.isEnabled();
+  voiceBtn.textContent=on?'🗣️':'🔈';
+  voiceBtn.classList.toggle('off',!on);
+}
+
+// Mic input: records via MediaRecorder, sends the clip to /transcribe (Groq Whisper),
+// then drops the returned text into the target textarea and sends it like a typed message.
+let mediaRecorder=null, audioChunks=[], activeMicBtn=null, activeTargetInput=null, activeSendBtn=null;
+function blobToBase64(blob){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onloadend=()=>resolve(String(reader.result).split(',')[1]||'');
+    reader.onerror=reject;
+    reader.readAsDataURL(blob);
+  });
+}
+function setRecordingUI(active){
+  activeMicBtn?.classList.toggle('recording',active);
+  if(activeTargetInput) activeTargetInput.disabled=active||busy;
+  if(activeSendBtn) activeSendBtn.disabled=active||busy;
+}
+
+// Auto-stops the recording once the user pauses, like a voice assistant -- no second click
+// needed. Watches mic volume via an AnalyserNode: once speech is heard, a sustained quiet
+// stretch ends the recording. A hard cap guards against a stuck-open mic. Clicking the mic
+// button again still stops it early, for anyone who wants to cut it short.
+const SILENCE_RMS_THRESHOLD=0.02;
+const SILENCE_HANGOVER_MS=1200;
+const MAX_RECORDING_MS=20000;
+let silenceCtx=null, silenceRaf=null;
+function startSilenceWatch(stream){
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC) return;
+  silenceCtx=new AC();
+  const source=silenceCtx.createMediaStreamSource(stream);
+  const analyser=silenceCtx.createAnalyser();
+  analyser.fftSize=512;
+  source.connect(analyser);
+  const data=new Uint8Array(analyser.fftSize);
+  const startedAt=Date.now();
+  let hasSpoken=false, silenceStart=null;
+  const tick=()=>{
+    if(!silenceCtx) return;
+    analyser.getByteTimeDomainData(data);
+    let sumSquares=0;
+    for(let i=0;i<data.length;i++){ const v=(data[i]-128)/128; sumSquares+=v*v; }
+    const rms=Math.sqrt(sumSquares/data.length);
+    if(rms>SILENCE_RMS_THRESHOLD){ hasSpoken=true; silenceStart=null; }
+    else if(hasSpoken){
+      if(silenceStart===null) silenceStart=Date.now();
+      else if(Date.now()-silenceStart>SILENCE_HANGOVER_MS){ stopRecording(); return; }
+    }
+    if(Date.now()-startedAt>MAX_RECORDING_MS){ stopRecording(); return; }
+    silenceRaf=requestAnimationFrame(tick);
+  };
+  silenceRaf=requestAnimationFrame(tick);
+}
+function stopSilenceWatch(){
+  if(silenceRaf) cancelAnimationFrame(silenceRaf);
+  silenceRaf=null;
+  if(silenceCtx){ silenceCtx.close().catch(()=>{}); silenceCtx=null; }
+}
+async function startRecording(micBtn,targetInput,sendButton){
+  if(busy || (mediaRecorder && mediaRecorder.state==='recording')) return;
+  VoiceOut.stop();
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    activeMicBtn=micBtn; activeTargetInput=targetInput; activeSendBtn=sendButton;
+    mediaRecorder=new MediaRecorder(stream);
+    audioChunks=[];
+    mediaRecorder.ondataavailable=e=>{ if(e.data.size>0) audioChunks.push(e.data); };
+    mediaRecorder.onstop=()=>{ stopSilenceWatch(); stream.getTracks().forEach(t=>t.stop()); handleRecordingStop(); };
+    mediaRecorder.start();
+    startSilenceWatch(stream);
+    setRecordingUI(true);
+    showStatus('Listening… (stops when you pause)');
+  }catch(err){
+    showStatus("Couldn't reach the mic — check your browser's mic permission.");
+  }
+}
+function stopRecording(){
+  if(mediaRecorder && mediaRecorder.state==='recording') mediaRecorder.stop();
+}
+async function handleRecordingStop(){
+  setRecordingUI(false);
+  const targetInput=activeTargetInput, sendButton=activeSendBtn;
+  const mimeType=mediaRecorder ? mediaRecorder.mimeType : 'audio/webm';
+  if(!audioChunks.length){ showStatus('Ready for the toss'); return; }
+  const blob=new Blob(audioChunks,{type:mimeType||'audio/webm'});
+  audioChunks=[];
+  showStatus('Transcribing…');
+  try{
+    const base64=await blobToBase64(blob);
+    const resp=await fetch('/.netlify/functions/transcribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({audio:base64,mimeType:blob.type})});
+    const data=await resp.json();
+    if(!resp.ok) throw new Error(data.error || `Request failed (${resp.status})`);
+    const text=(data.text||'').trim();
+    if(!text){ showStatus("Didn't catch that — try again."); return; }
+    targetInput.value=text; autosize(targetInput);
+    if(targetInput===msgInput) sendInitial(); else sendFollowup();
+  }catch(err){
+    showStatus(`Couldn't transcribe (${err.message})`);
+  }finally{
+    if(targetInput) targetInput.disabled=busy;
+    if(sendButton) sendButton.disabled=busy;
+  }
+}
+function wireMicButton(micBtn,targetInput,sendButton){
+  micBtn.addEventListener('click',()=>{
+    if(mediaRecorder && mediaRecorder.state==='recording' && activeMicBtn===micBtn){ stopRecording(); }
+    else{ startRecording(micBtn,targetInput,sendButton); }
+  });
+}
+
 document.querySelectorAll('.choice').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.choice').forEach(x=>x.classList.remove('active'));btn.classList.add('active');msgInput.value=btn.dataset.prompt;autosize(msgInput);beginReading(btn.dataset.prompt)}));
 sendBtn.addEventListener('click',sendInitial);followupBtn.addEventListener('click',sendFollowup);
+wireMicButton(micBtnInitial,msgInput,sendBtn);
+wireMicButton(micBtnFollowup,followupInput,followupBtn);
 [msgInput,followupInput].forEach(el=>el.addEventListener('input',()=>autosize(el)));
 msgInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendInitial()}});
 followupInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendFollowup()}});
 document.getElementById('newReadingTop').addEventListener('click',resetUI);newReadingBtn.addEventListener('click',resetUI);
 soundBtn.addEventListener('click',()=>{ Sound.ensure(); Sound.setEnabled(!Sound.isEnabled()); syncSoundBtn(); if(Sound.isEnabled()) Sound.blip(); });
+voiceBtn.addEventListener('click',()=>{ VoiceOut.setEnabled(!VoiceOut.isEnabled()); syncVoiceBtn(); if(!VoiceOut.isEnabled()) VoiceOut.stop(); });
 syncSoundBtn();
+syncVoiceBtn();
 resetUI();
 loadDeck();
 </script>
