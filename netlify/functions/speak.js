@@ -12,7 +12,7 @@ try {
 }
 
 const MODEL = "canopylabs/orpheus-v1-english";
-const VOICE = "tara";
+const VOICE = "hannah";
 const MAX_INPUT_CHARS = 2000;
 
 exports.handler = async (event) => {
@@ -53,7 +53,7 @@ exports.handler = async (event) => {
         model: MODEL,
         voice: VOICE,
         input: text.trim().slice(0, MAX_INPUT_CHARS),
-        response_format: "mp3"
+        response_format: "wav"
       })
     });
 
@@ -70,7 +70,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ audio: base64, mimeType: "audio/mpeg" })
+      body: JSON.stringify({ audio: base64, mimeType: "audio/wav" })
     };
   } catch (err) {
     return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
