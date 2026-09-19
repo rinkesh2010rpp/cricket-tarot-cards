@@ -478,22 +478,43 @@ function syncSoundBtn(){
   soundBtn.classList.toggle('off',!on);
 }
 
-// Spoken replies: uses the browser's built-in speechSynthesis for now (no backend call, no
-// setup) -- swap this for the /.netlify/functions/speak call (Groq Orpheus TTS) once its
-// terms are accepted in the Groq console, for a less robotic voice. Off by default -- turning
-// it on is itself the user gesture that unlocks speech synthesis in some browsers.
+// Spoken replies: calls /.netlify/functions/speak (Groq Orpheus TTS, "hannah" voice) and plays
+// back the returned audio. Falls back to the browser's built-in speechSynthesis if that call
+// fails (offline, quota, etc). Off by default -- turning it on is itself the user gesture that
+// unlocks audio playback/speech synthesis in some browsers.
 const VoiceOut = (() => {
   let enabled = false;
   try { enabled = localStorage.getItem('ct_voice') === 'on'; } catch (e) {}
+  let audioEl = null;
+  let requestId = 0;
   function isEnabled(){ return enabled; }
   function setEnabled(v){ enabled = v; try { localStorage.setItem('ct_voice', v ? 'on' : 'off'); } catch (e) {} }
-  function stop(){ if (window.speechSynthesis) window.speechSynthesis.cancel(); }
-  function speak(text){
-    if (!enabled || !text || !window.speechSynthesis) return;
-    stop();
+  function stop(){
+    requestId++;
+    if (audioEl) { audioEl.pause(); audioEl.src=''; audioEl=null; }
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+  }
+  function speakWithBrowserTts(text){
+    if (!window.speechSynthesis) return;
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
     window.speechSynthesis.speak(utter);
+  }
+  async function speak(text){
+    if (!enabled || !text) return;
+    stop();
+    const myRequestId = requestId;
+    try{
+      const resp = await fetch('/.netlify/functions/speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.error || `Request failed (${resp.status})`);
+      if (myRequestId !== requestId) return; // stopped or superseded while awaiting
+      audioEl = new Audio(`data:${data.mimeType};base64,${data.audio}`);
+      audioEl.play().catch(()=>{});
+    }catch(err){
+      if (myRequestId !== requestId) return;
+      speakWithBrowserTts(text);
+    }
   }
   return { isEnabled, setEnabled, stop, speak };
 })();
