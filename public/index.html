@@ -306,6 +306,7 @@ let history = [];
 let totalCardsDrawn = 0;
 let drawnCardIds = new Set();
 let busy = false;
+let readingEpoch = 0;
 
 const questionStage = document.getElementById('questionStage');
 const readingStage = document.getElementById('readingStage');
@@ -368,6 +369,7 @@ function addTypingBubble(){
   return el;
 }
 function resetUI(){
+  readingEpoch++;
   stopRecording(); VoiceOut.stop();
   history=[]; totalCardsDrawn=0; drawnCardIds=new Set(); busy=false;
   chatLog.innerHTML=''; tableDeck.innerHTML='<div class="table-panel-empty" id="tablePanelEmpty">Cards drawn during the reading will be laid out here.</div>';
@@ -382,21 +384,30 @@ function beginReading(text){
   setBusy(true); callAgent();
 }
 async function callAgent(){
+  const epoch=readingEpoch;
   const typingEl=addTypingBubble(); setBusy(true);
   try{
     const resp=await fetch('/.netlify/functions/reading',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history})});
     const data=await resp.json();
-    typingEl.remove();
-    if(!resp.ok) throw new Error(data.error || `Request failed (${resp.status})`);
+    if(epoch!==readingEpoch) return; // a New Reading started while this was in flight
+    if(!resp.ok){ typingEl.remove(); throw new Error(data.error || `Request failed (${resp.status})`); }
     const message=data.message; history.push(message);
     if(message.content && message.content.trim()){
-      addBubble('reader',message.content.trim());
-      VoiceOut.speak(message.content.trim());
+      const content=message.content.trim();
+      // Hold the bubble behind the typing indicator until the voice is actually audible
+      // (or immediately, when voice is off), so text and speech land together.
+      await new Promise(resolve=>VoiceOut.speak(content,resolve));
+      if(epoch!==readingEpoch) return;
+      typingEl.remove();
+      addBubble('reader',content);
+    }else{
+      typingEl.remove();
     }
     const toolCalls=message.tool_calls||[];
     if(toolCalls.length>0){ await handleToolCall(toolCalls[0]); }
     else{ setBusy(false); }
   }catch(err){
+    if(epoch!==readingEpoch) return;
     typingEl.remove();
     addBubble('reader',`Rain's stopped play — I couldn't reach the Oracle (${err.message}). If this is a fresh deploy, make sure GROQ_API_KEY is set under Site configuration → Environment variables in Netlify, then try again.`);
     setBusy(false);
@@ -494,26 +505,35 @@ const VoiceOut = (() => {
     if (audioEl) { audioEl.pause(); audioEl.src=''; audioEl=null; }
     if (window.speechSynthesis) window.speechSynthesis.cancel();
   }
-  function speakWithBrowserTts(text){
-    if (!window.speechSynthesis) return;
+  function speakWithBrowserTts(text, onStart){
+    const fire=once(onStart);
+    if (!window.speechSynthesis) { fire(); return; }
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
+    utter.onstart = fire;
+    utter.onerror = fire;
     window.speechSynthesis.speak(utter);
   }
-  async function speak(text){
-    if (!enabled || !text) return;
+  function once(fn){ let called=false; return (...a)=>{ if(called) return; called=true; fn&&fn(...a); }; }
+  // speak(text, onStart): onStart fires the moment the reply is actually audible (or
+  // immediately when voice is off), so callers can hold text rendering until then and have
+  // the bubble appear in sync with the voice instead of seconds ahead of it.
+  async function speak(text, onStart){
+    const fire=once(onStart);
+    if (!enabled || !text) { fire(); return; }
     stop();
     const myRequestId = requestId;
     try{
       const resp = await fetch('/.netlify/functions/speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || `Request failed (${resp.status})`);
-      if (myRequestId !== requestId) return; // stopped or superseded while awaiting
+      if (myRequestId !== requestId) { fire(); return; }
       audioEl = new Audio(`data:${data.mimeType};base64,${data.audio}`);
-      audioEl.play().catch(()=>{});
+      audioEl.addEventListener('playing', fire, {once:true});
+      audioEl.play().catch(fire);
     }catch(err){
-      if (myRequestId !== requestId) return;
-      speakWithBrowserTts(text);
+      if (myRequestId !== requestId) { fire(); return; }
+      speakWithBrowserTts(text, fire);
     }
   }
   return { isEnabled, setEnabled, stop, speak };
