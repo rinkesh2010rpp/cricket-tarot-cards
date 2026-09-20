@@ -10,7 +10,12 @@ try {
   // dotenv is optional at runtime on Netlify; Netlify injects environment variables directly.
 }
 
+const { checkRateLimit } = require("./_rateLimit");
+
 const MODEL = "whisper-large-v3-turbo";
+// The mic recorder caps clips at 20s, so a legitimate upload is small; this just blocks
+// oversized payloads someone might post directly to the endpoint.
+const MAX_AUDIO_BYTES = 8 * 1024 * 1024;
 
 function extensionFor(mimeType) {
   if (mimeType.includes("wav")) return "wav";
@@ -22,6 +27,14 @@ function extensionFor(mimeType) {
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: JSON.stringify({ error: "Method Not Allowed" }) };
+  }
+
+  const rateLimit = await checkRateLimit(event, "transcribe", {
+    perIpLimit: 40, perIpWindowMs: 15 * 60 * 1000,
+    globalLimit: 1500, globalWindowMs: 24 * 60 * 60 * 1000
+  });
+  if (!rateLimit.allowed) {
+    return { statusCode: 429, body: JSON.stringify({ error: rateLimit.error }) };
   }
 
   const apiKey = process.env.GROQ_API_KEY;
@@ -54,6 +67,9 @@ exports.handler = async (event) => {
   }
   if (!buffer.length) {
     return { statusCode: 400, body: JSON.stringify({ error: "audio was empty" }) };
+  }
+  if (buffer.length > MAX_AUDIO_BYTES) {
+    return { statusCode: 413, body: JSON.stringify({ error: "audio clip is too large" }) };
   }
 
   const type = mimeType || "audio/webm";
