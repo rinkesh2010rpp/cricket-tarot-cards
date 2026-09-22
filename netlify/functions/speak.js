@@ -11,6 +11,8 @@ try {
   // dotenv is optional at runtime on Netlify; Netlify injects environment variables directly.
 }
 
+const { checkRateLimit } = require("./_rateLimit");
+
 const MODEL = "canopylabs/orpheus-v1-english";
 const VOICE = "hannah";
 const MAX_INPUT_CHARS = 2000;
@@ -18,6 +20,14 @@ const MAX_INPUT_CHARS = 2000;
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: JSON.stringify({ error: "Method Not Allowed" }) };
+  }
+
+  const rateLimit = await checkRateLimit(event, "speak", {
+    perIpLimit: 40, perIpWindowMs: 15 * 60 * 1000,
+    globalLimit: 1500, globalWindowMs: 24 * 60 * 60 * 1000
+  });
+  if (!rateLimit.allowed) {
+    return { statusCode: 429, body: JSON.stringify({ error: rateLimit.error }) };
   }
 
   const apiKey = process.env.GROQ_API_KEY;
