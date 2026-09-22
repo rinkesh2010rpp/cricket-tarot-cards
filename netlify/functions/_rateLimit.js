@@ -4,10 +4,17 @@
 // per-IP window (stops one client from hammering an endpoint) and a site-wide daily budget
 // (a backstop against a spread-out flood or a runaway client loop, regardless of IP).
 const { getStore } = require("@netlify/blobs");
+const { createHash } = require("crypto");
 
 function clientIp(event) {
   const header = event.headers["x-nf-client-connection-ip"] || event.headers["x-forwarded-for"] || "";
   return header.split(",")[0].trim() || "unknown";
+}
+
+// Hashed so the stored bucket key can't be reversed back to an actual IP address --
+// the counter only needs to tell two requests from the same origin apart, not store the origin.
+function hashIp(ip) {
+  return createHash("sha256").update(ip).digest("hex").slice(0, 16);
 }
 
 async function bump(store, key, limit, windowMs) {
@@ -27,7 +34,7 @@ async function bump(store, key, limit, windowMs) {
 async function checkRateLimit(event, scope, { perIpLimit, perIpWindowMs, globalLimit, globalWindowMs }) {
   try {
     const store = getStore("rate-limits");
-    const ip = clientIp(event);
+    const ip = hashIp(clientIp(event));
 
     const okIp = await bump(store, `ip:${scope}:${ip}`, perIpLimit, perIpWindowMs);
     if (!okIp) {
