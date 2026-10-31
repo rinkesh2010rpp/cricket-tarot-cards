@@ -27,6 +27,7 @@ public/index.html  ──POST──▶  /.netlify/functions/reading     ──�
 | `netlify/functions/speak.js` | Text-to-speech for spoken replies |
 | `netlify/functions/_rateLimit.js` | Shared rate limiter used by all three functions |
 | `netlify.toml` | Netlify build and dev config |
+| `.env.example` | Template for the local `.env` file |
 
 ## The deck
 
@@ -49,6 +50,7 @@ Needs Node 18+ and the [Netlify CLI](https://docs.netlify.com/cli/get-started/).
 
 ```bash
 npm install
+cp .env.example .env   # then add your GROQ_API_KEY
 netlify dev
 ```
 
@@ -65,6 +67,26 @@ One environment variable:
 If it's missing, each function returns a 500 saying so.
 
 **Spoken replies need a one-time step:** Groq's Orpheus TTS model requires the org admin to accept its terms in the [Groq playground](https://console.groq.com/playground?model=canopylabs%2Forpheus-v1-english). Until then `speak` returns an error and spoken replies won't play.
+
+## Function API
+
+All three endpoints accept `POST` with a JSON body and return JSON. Anything else gets a 405.
+
+| Endpoint | Request | Success (200) |
+|---|---|---|
+| `reading` | `{ "messages": [...] }`: the conversation so far, in OpenAI chat format (no system message; the function adds it) | `{ "message": {...}, "model": "openai/gpt-oss-120b" }`: the assistant message, which may contain `tool_calls` for `draw_cards` |
+| `transcribe` | `{ "audio": "<base64>", "mimeType": "audio/webm" }`: `mimeType` is optional and defaults to `audio/webm` | `{ "text": "..." }` |
+| `speak` | `{ "text": "..." }`: truncated to 2,000 characters | `{ "audio": "<base64>", "mimeType": "audio/wav" }` |
+
+Errors come back as `{ "error": "..." }` with:
+
+- **400** for a malformed body (bad JSON, `messages` not an array, missing `text` or `audio`, invalid base64)
+- **413** from `transcribe` when the decoded audio is over 8 MB
+- **429** when a rate limit is hit (see below)
+- **500** when `GROQ_API_KEY` is missing or the request throws
+- Groq's own status code, passed through, when the Groq call fails
+
+`reading` calls Groq with `temperature: 0.9` and `max_tokens: 700`; the Orpheus voice is `hannah`. Both are constants at the top of their files.
 
 ## Rate limits
 
